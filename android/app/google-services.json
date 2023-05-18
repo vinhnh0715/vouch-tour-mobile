@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "493014158201",
+    "project_id": "vouch-tour-mobile-swd",
+    "storage_bucket": "vouch-tour-mobile-swd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493014158201:android:9197a2c32598e31b517da8",
+        "android_client_info": {
+          "package_name": "com.groupswd.vouchtour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493014158201-gs38cd35a7rds7bet4lu70jbnv9jl0ln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.groupswd.vouchtour",
+            "certificate_hash": "e283c650e83c59f40a993a3e2c40756f36c464dd"
+          }
+        },
+        {
+          "client_id": "493014158201-6pd98p79fbo9qaoo8mguiq0ushpu22ps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6mwAEq6_IL50oQAv7EZ7rN_12XoyZXoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493014158201-42o1akdfick8mb022tgeo78vpdhi4oe4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
