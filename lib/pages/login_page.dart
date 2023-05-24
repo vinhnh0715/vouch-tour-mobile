@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,6 +11,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookAuth facebookAuth = FacebookAuth.instance;
 
   Future<UserCredential?> _signInWithGoogle() async {
     try {
@@ -30,6 +32,32 @@ class _LoginPageState extends State<LoginPage> {
       return userCredential;
     } catch (e) {
       print("Error signing in with Google: $e");
+      return null;
+    }
+  }
+
+  Future<UserCredential?> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      if (loginResult.status == LoginStatus.success) {
+        final OAuthCredential credential =
+            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        return userCredential;
+      } else if (loginResult.status == LoginStatus.cancelled) {
+        print('Facebook login cancelled');
+        return null;
+      } else {
+        print('Facebook login failed');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      print('Error during Facebook login: $e');
+      print(stackTrace); // Print the stack trace for further analysis
       return null;
     }
   }
@@ -81,8 +109,9 @@ class _LoginPageState extends State<LoginPage> {
                   label: Text(
                     "Login with Google",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black), // Adjust the font size as needed
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.transparent,
@@ -90,6 +119,27 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              SizedBox(height: 20),
+              Container(
+                  width: 200,
+                  height: 50, // Adjust the width as needed
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: Colors.black),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      UserCredential? userCredential =
+                          await signInWithFacebook();
+                      if (userCredential != null) {
+                        // User logged in successfully, handle the next steps
+                      } else {
+                        // Handle login failure
+                      }
+                    },
+                    child: Text('Login with Facebook'),
+                  )),
             ],
           ),
         ),
