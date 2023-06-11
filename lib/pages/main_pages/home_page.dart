@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:vouch_tour_mobile/pages/create_new_tour_page.dart';
-import 'package:vouch_tour_mobile/pages/profile_page.dart';
-import 'package:vouch_tour_mobile/utils/drawer.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/tour_page.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
+//import 'package:vouch_tour_mobile/utils/drawer.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
-import 'package:vouch_tour_mobile/pages/inventory_page.dart';
-import 'package:vouch_tour_mobile/pages/order_page.dart';
-import 'package:vouch_tour_mobile/pages/notification_page.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/inventory_page.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,11 +27,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tour Assist System"),
+        automaticallyImplyLeading: false,
+        title: const Text("Tour Assist System"),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
               // Add your notification logic here
             },
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 OrderPage(),
-                CreateNewTourPage(),
+                TourPage(),
                 InventoryPage(),
                 ProfilePage(),
               ],

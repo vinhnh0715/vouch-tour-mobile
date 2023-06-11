@@ -13,6 +13,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? _userName;
   String? _userAvatarUrl;
+  String? _userEmail;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _userName = currentUser.displayName;
           _userAvatarUrl = currentUser.photoUrl;
+          _userEmail = currentUser.email;
         });
       }
     } catch (e) {
@@ -61,7 +63,16 @@ class _ProfilePageState extends State<ProfilePage> {
           Text(
             _userName ?? 'Loading...',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16),
+          Text(
+            _userEmail ?? 'Loading...',
+            style: TextStyle(
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
