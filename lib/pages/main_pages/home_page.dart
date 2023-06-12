@@ -25,94 +25,97 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Tour Assist System"),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Add your notification logic here
-            },
-          ),
-        ],
-      ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text("Tour Assist System"),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () {
+                // Add your notification logic here
+              },
+            ),
+          ],
+        ),
 
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _currentPageIndex == 0
-                ? Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1,
+        body: Column(
+          children: [
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _currentPageIndex == 0
+                  ? Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.qr_code),
+                            onPressed: () {
+                              // Add your QR code scanning logic here
+                            },
                           ),
                         ),
-                        child: IconButton(
-                          icon: Icon(Icons.qr_code),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                            ),
+                            onChanged: (value) {
+                              // Add your search logic here
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.search),
                           onPressed: () {
-                            // Add your QR code scanning logic here
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                          ),
-                          onChanged: (value) {
                             // Add your search logic here
                           },
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          // Add your search logic here
-                        },
-                      ),
-                    ],
-                  )
-                : null,
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPageIndex = index;
-                });
-              },
-              children: [
-                Center(
-                  child: Container(
-                    child: Text("Hello world! This is home page."),
-                  ),
-                ),
-                OrderPage(),
-                TourPage(),
-                InventoryPage(),
-                ProfilePage(),
-              ],
+                      ],
+                    )
+                  : null,
             ),
-          ),
-        ],
-      ),
-      // drawer: AppDrawer(),
-      bottomNavigationBar: AppFooter(
-        currentIndex: _currentPageIndex,
-        onTap: _navigateToPage,
-        pageController: _pageController,
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPageIndex = index;
+                  });
+                },
+                children: [
+                  Center(
+                    child: Container(
+                      child: Text("Hello world! This is home page."),
+                    ),
+                  ),
+                  OrderPage(),
+                  TourPage(),
+                  InventoryPage(),
+                  ProfilePage(),
+                ],
+              ),
+            ),
+          ],
+        ),
+        // drawer: AppDrawer(),
+        bottomNavigationBar: AppFooter(
+          currentIndex: _currentPageIndex,
+          onTap: _navigateToPage,
+          pageController: _pageController,
+        ),
       ),
     );
   }

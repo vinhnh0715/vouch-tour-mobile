@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatelessWidget {
-  const OrderPage({super.key});
+  const OrderPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("This is Order page"),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Center(
+          child: const Text("This is the Order page"),
+        ),
       ),
     );
   }

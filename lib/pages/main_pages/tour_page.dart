@@ -7,9 +7,12 @@ class TourPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("This is Create New Tour Page"),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: const Scaffold(
+        body: Center(
+          child: Text("This is Create New Tour Page"),
+        ),
       ),
     );
   }
