@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vouch_tour_mobile/pages/product_pages/list_product_by_category_id.dart';
 
 class CategoryCard extends StatelessWidget {
   final Color begin;
@@ -76,7 +77,7 @@ class CategoryCard extends StatelessWidget {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(24))),
                 padding:
@@ -102,17 +103,22 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
+//============================ StaggeredCardCard ============================
 class StaggeredCardCard extends StatefulWidget {
   final Color begin;
   final Color end;
+  final String categoryId;
   final String categoryName;
   final String assetPath;
+  final Function(String) onTap;
 
   const StaggeredCardCard({
     required this.begin,
     required this.end,
     required this.categoryName,
+    required this.categoryId,
     required this.assetPath,
+    required this.onTap,
   });
 
   @override
@@ -148,20 +154,49 @@ class _StaggeredCardCardState extends State<StaggeredCardCard>
     }
   }
 
+  void _handleTap() async {
+    if (_controller.isAnimating) {
+      // Animation is already in progress, do nothing
+      return;
+    }
+
+    if (isActive) {
+      isActive = false;
+      await _reverseAnimation();
+    } else {
+      isActive = true;
+      await _playAnimation();
+    }
+
+    if (isActive) {
+      await _controller.reverse().then((_) async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListProductByCategoryId(
+              categoryId: widget.categoryId,
+            ),
+          ),
+        );
+
+        if (result == true) {
+          isActive = false;
+          await _reverseAnimation();
+          widget.onTap(widget.categoryId);
+        } else {
+          isActive = true;
+          await _playAnimation();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var timeDilation = 10.0; // 1.0 is normal animation speed.
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        if (isActive) {
-          isActive = !isActive;
-          _reverseAnimation();
-        } else {
-          isActive = !isActive;
-          _playAnimation();
-        }
-      },
+      onTap: _handleTap,
       child: CategoryCard(
         controller: _controller.view,
         categoryName: widget.categoryName,
@@ -170,5 +205,11 @@ class _StaggeredCardCardState extends State<StaggeredCardCard>
         assetPath: widget.assetPath,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

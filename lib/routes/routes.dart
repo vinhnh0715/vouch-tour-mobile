@@ -7,6 +7,7 @@ import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/tour_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/category_search_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/category_list_page.dart';
+import 'package:vouch_tour_mobile/pages/product_pages/list_product_by_category_id.dart';
 
 var appRoutes = {
   "/": (context) => LoginPage(),
@@ -19,4 +20,5 @@ var appRoutes = {
   "/createnewtour": (context) => TourPage(),
   "/categorysearch": (context) => CategorySearchPage(),
   "/categorylist": (context) => CategoryListPage(),
+  //"/listproductbycategoryid": (context) => ListProductByCategoryId(),
 };
