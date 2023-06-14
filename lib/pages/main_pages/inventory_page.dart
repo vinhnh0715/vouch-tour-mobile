@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart'; // Import the package
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:vouch_tour_mobile/models/product_model.dart';
+import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class InventoryPage extends StatefulWidget {
   @override
@@ -11,25 +9,13 @@ class InventoryPage extends StatefulWidget {
 }
 
 class _InventoryPageState extends State<InventoryPage> {
-  Future<List<Product>> fetchProducts() async {
-    final response = await http.get(
-        Uri.parse('https://vouch-tour-apis.azurewebsites.net/api/Products'));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> productsJson = json.decode(response.body);
-      return productsJson.map((json) => Product.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to fetch products');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         body: FutureBuilder<List<Product>>(
-          future: fetchProducts(),
+          future: ApiService.fetchProducts(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

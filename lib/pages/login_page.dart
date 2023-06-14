@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -34,6 +35,11 @@ class _LoginPageState extends State<LoginPage> {
           await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
+      if (user != null) {
+        final String email = user.email!;
+        final String jwtToken = await ApiService.fetchJwtToken(email);
+      }
+
       setState(() {
         _isLoading = false; // Set loading state to false when login is done
       });
@@ -48,49 +54,49 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<UserCredential?> signInWithFacebook() async {
-    try {
-      setState(() {
-        _isLoading = true; // Set loading state to true when login starts
-      });
+  // Future<UserCredential?> signInWithFacebook() async {
+  //   try {
+  //     setState(() {
+  //       _isLoading = true; // Set loading state to true when login starts
+  //     });
 
-      final LoginResult loginResult = await FacebookAuth.instance.login();
+  //     final LoginResult loginResult = await FacebookAuth.instance.login();
 
-      if (loginResult.status == LoginStatus.success) {
-        final OAuthCredential credential =
-            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+  //     if (loginResult.status == LoginStatus.success) {
+  //       final OAuthCredential credential =
+  //           FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-        final UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+  //       final UserCredential userCredential =
+  //           await FirebaseAuth.instance.signInWithCredential(credential);
 
-        setState(() {
-          _isLoading = false; // Set loading state to false when login is done
-        });
+  //       setState(() {
+  //         _isLoading = false; // Set loading state to false when login is done
+  //       });
 
-        return userCredential;
-      } else if (loginResult.status == LoginStatus.cancelled) {
-        setState(() {
-          _isLoading =
-              false; // Set loading state to false if login is cancelled
-        });
-        print('Facebook login cancelled');
-        return null;
-      } else {
-        setState(() {
-          _isLoading = false; // Set loading state to false if login fails
-        });
-        print('Facebook login failed');
-        return null;
-      }
-    } catch (e, stackTrace) {
-      setState(() {
-        _isLoading = false; // Set loading state to false in case of an error
-      });
-      print('Error during Facebook login: $e');
-      print(stackTrace); // Print the stack trace for further analysis
-      return null;
-    }
-  }
+  //       return userCredential;
+  //     } else if (loginResult.status == LoginStatus.cancelled) {
+  //       setState(() {
+  //         _isLoading =
+  //             false; // Set loading state to false if login is cancelled
+  //       });
+  //       print('Facebook login cancelled');
+  //       return null;
+  //     } else {
+  //       setState(() {
+  //         _isLoading = false; // Set loading state to false if login fails
+  //       });
+  //       print('Facebook login failed');
+  //       return null;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     setState(() {
+  //       _isLoading = false; // Set loading state to false in case of an error
+  //     });
+  //     print('Error during Facebook login: $e');
+  //     print(stackTrace); // Print the stack trace for further analysis
+  //     return null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
