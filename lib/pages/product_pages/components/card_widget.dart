@@ -65,16 +65,18 @@ class ProductCardWidget extends ConsumerWidget {
                     color: Colors.grey.shade500,
                     fontSize: 12,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$${product.resellPrice}',
+                      '${product.resellPrice} VND',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     IconButton(
                       onPressed: () {
@@ -102,10 +104,13 @@ class ProductCardWidget extends ConsumerWidget {
                               .removeItem(product.id);
                         }
                       },
-                      icon: Icon(
-                        product.isSelected
-                            ? Icons.check_circle
-                            : Icons.add_circle,
+                      icon: const Icon(
+                        //Icons.navigate_next_rounded,
+                        Icons.check_circle,
+                        // product.isSelected
+                        //     ? Icons.check_circle
+                        //     : Icons.add_circle,
+                        color: Colors.green,
                         size: 30,
                       ),
                     ),

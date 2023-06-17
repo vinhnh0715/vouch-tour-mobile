@@ -7,7 +7,6 @@ import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/inventory_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
-import 'package:vouch_tour_mobile/pages/main_pages/category_search_page.dart';
 
 import '../product_pages/product_list_page.dart';
 
@@ -107,12 +106,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   //const OrderPage(),
+                  CategoryListPage(),
+                  const TourPage(),
+                  //CategorySearchPage(),
                   const ProviderScope(
                     child: ProductListPage(),
                   ),
-                  const TourPage(),
-                  //CategorySearchPage(),
-                  CategoryListPage(),
                   const ProfilePage(),
                 ],
               ),
