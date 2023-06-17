@@ -3,20 +3,27 @@ class Product {
   String productName;
   int resellPrice;
   int retailPrice;
+  String description;
   String status;
   List<Image> images;
   Supplier supplier;
   Category category;
+  // MORE
+  bool isSelected;
+  int qty;
 
   Product({
     required this.id,
     required this.productName,
     required this.resellPrice,
     required this.retailPrice,
+    required this.description,
     required this.status,
     required this.images,
     required this.supplier,
     required this.category,
+    this.isSelected = false,
+    this.qty = 0,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -31,10 +38,41 @@ class Product {
       productName: json['productName'],
       resellPrice: json['resellPrice'],
       retailPrice: json['retailPrice'],
+      description: json['description'],
       status: json['status'],
       images: images,
       supplier: supplier,
       category: category,
+      isSelected: false,
+      qty: 0,
+    );
+  }
+
+  Product copyWith({
+    String? id,
+    String? productName,
+    int? resellPrice,
+    int? retailPrice,
+    String? description,
+    String? status,
+    List<Image>? images,
+    Supplier? supplier,
+    Category? category,
+    bool? isSelected,
+    int? qty,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      productName: productName ?? this.productName,
+      resellPrice: resellPrice ?? this.resellPrice,
+      retailPrice: retailPrice ?? this.retailPrice,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      images: images ?? this.images,
+      supplier: supplier ?? this.supplier,
+      category: category ?? this.category,
+      isSelected: isSelected ?? this.isSelected,
+      qty: qty ?? this.qty,
     );
   }
 }
