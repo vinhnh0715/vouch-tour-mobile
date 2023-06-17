@@ -39,15 +39,14 @@ class Category {
     final Color begin = Color(0xFF000000 + random.nextInt(0xFFFFFF));
     final Color end = Color(0xFF000000 + random.nextInt(0xFFFFFF));
 
-    final String image =
-        'lib/assets/images/${json["categoryName"].toLowerCase()}_image.png';
+    //final String image = 'lib/assets/images/tour_logo3.png';
 
     return Category(
       id: json['id'],
       begin: begin,
       end: end,
       categoryName: json['categoryName'],
-      image: image,
+      image: json['url'],
     );
   }
 }

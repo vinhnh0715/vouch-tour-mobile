@@ -44,7 +44,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
-                  'Category List',
+                  'Danh sách phân loại sản phẩm',
                   style: TextStyle(
                     color: Color(0xff202020),
                     fontSize: 22,
@@ -63,7 +63,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
                 controller: searchController,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Search',
+                  hintText: 'Tìm loại sản phẩm',
                   prefixIcon: SvgPicture.asset(
                     'lib/assets/icons/search_icon.svg',
                     fit: BoxFit.scaleDown,

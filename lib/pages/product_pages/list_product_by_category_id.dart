@@ -8,15 +8,18 @@ class ListProductByCategoryId extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   title: Text('Category Details'),
+      //   leading: IconButton(
+      //     icon: Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       // Navigate back and send a result
+      //       Navigator.pop(context, true);
+      //     },
+      //   ),
+      // ),
       appBar: AppBar(
         title: Text('Category Details'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate back and send a result
-            Navigator.pop(context, true);
-          },
-        ),
       ),
       body: Center(
         child: Text('Category ID: $categoryId'),

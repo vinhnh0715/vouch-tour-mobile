@@ -77,7 +77,7 @@ class AppFooter extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildBottomNavItem(Icons.home, 'Trang chủ', 0, context),
-            _buildBottomNavItem(Icons.shopping_cart, 'Đơn hàng', 1, context),
+            _buildBottomNavItem(Icons.shopping_cart, 'Giỏ hàng', 1, context),
             _buildBottomNavItem(
                 Icons.book_outlined, 'Quản lý tour', 2, context),
             _buildBottomNavItem(Icons.inventory, 'Sản phẩm', 3, context),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vouch_tour_mobile/pages/profile_pages/information_profile_page.dart';
+import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage();
@@ -45,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
       onWillPop: () async => false,
       child: Scaffold(
         body: ListView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           children: <Widget>[
             Container(
               width: 80,
@@ -55,43 +57,50 @@ class _ProfilePageState extends State<ProfilePage> {
                 image: DecorationImage(
                   image: _userAvatarUrl != null
                       ? NetworkImage(_userAvatarUrl!)
-                      : AssetImage("assets/images/facebook_logo.png")
-                          as ImageProvider<Object>,
+                      : const AssetImage("") as ImageProvider<Object>,
                 ),
               ),
-              child:
-                  _userAvatarUrl == null ? Icon(Icons.person, size: 50) : null,
+              child: _userAvatarUrl == null
+                  ? const Icon(Icons.person, size: 50)
+                  : null,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               _userName ?? 'Loading...',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               _userEmail ?? 'Loading...',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Account Info'),
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Thông tin cá nhân'),
               onTap: () {
                 // Navigate to account info page
-                Navigator.pushNamed(context, '/account');
+                //Navigator.pushNamed(context, '/account');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InformationProfilePage(
+                        tourGuideId: ApiService.currentUserId),
+                  ),
+                );
               },
             ),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Đăng xuất'),
               onTap: () {
                 // Logout functionality
                 _googleSignIn.signOut();

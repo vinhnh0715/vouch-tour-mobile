@@ -70,10 +70,34 @@ class CategoryCard extends StatelessWidget {
 //        mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 16.0),
                 height: itemHeight.value,
-                child: Image.asset(
-                  assetPath,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox(
+                    width: 150,
+                    height: 40,
+                    child: Image.network(
+                      assetPath,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                      errorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Text('Failed to load image');
+                      },
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -83,7 +107,7 @@ class CategoryCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text(
-                  'View more',
+                  'Xem thêm',
                   style: TextStyle(color: end, fontWeight: FontWeight.bold),
                 ),
               )
@@ -180,11 +204,11 @@ class _StaggeredCardCardState extends State<StaggeredCardCard>
         );
 
         if (result == true) {
-          isActive = false;
+          //isActive = false;
           await _reverseAnimation();
-          widget.onTap(widget.categoryId);
+          //widget.onTap(widget.categoryId);
         } else {
-          isActive = true;
+          //isActive = true;
           await _playAnimation();
         }
       });
@@ -193,7 +217,7 @@ class _StaggeredCardCardState extends State<StaggeredCardCard>
 
   @override
   Widget build(BuildContext context) {
-    var timeDilation = 10.0; // 1.0 is normal animation speed.
+    //var timeDilation = 10.0; // 1.0 is normal animation speed.
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _handleTap,
