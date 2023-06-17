@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/cart_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/category_list_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/tour_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
@@ -106,8 +107,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   //const OrderPage(),
+                  const ProviderScope(
+                    child: CartPage(),
+                  ),
                   CategoryListPage(),
-                  const TourPage(),
+                  //const TourPage(),
                   //CategorySearchPage(),
                   const ProviderScope(
                     child: ProductListPage(),

@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:vouch_tour_mobile/models/cart_model.dart';
 import 'dart:convert';
 import 'package:vouch_tour_mobile/models/product_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
@@ -118,5 +119,49 @@ class ApiService {
     } else {
       throw Exception('Failed to fetch tour guide');
     }
+  }
+
+  // ========================= CART API ==============================
+  static Future<List<CartItem>> fetchCartItems() async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}carts');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> cartItemsJson = json.decode(response.body);
+      return cartItemsJson.map((json) => CartItem.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch cart items');
+    }
+  }
+
+  static Future<int> addToCart(String productId, double actualPrice) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}carts');
+    final body = jsonEncode({
+      'productId': productId,
+      'actualPrice': actualPrice,
+    });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: body,
+    );
+
+    return response.statusCode;
   }
 }

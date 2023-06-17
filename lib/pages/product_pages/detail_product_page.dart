@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 
 import 'package:vouch_tour_mobile/controllers/product_controller.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/product_list_page.dart';
+import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class DetailProductPage extends ConsumerWidget {
   DetailProductPage({Key? key, required this.getIndex}) : super(key: key);
@@ -14,6 +15,7 @@ class DetailProductPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(currentIndexProvider);
     final products = ref.watch(proudctNotifierProvider);
+    final TextEditingController actualPriceController = TextEditingController();
 
     // Check if the products list is empty or if the getIndex is out of range
     if (products.isEmpty || getIndex < 0 || getIndex >= products.length) {
@@ -143,8 +145,84 @@ class DetailProductPage extends ConsumerWidget {
                         backgroundColor: const Color(0xFF843667),
                         minimumSize: const Size(double.infinity, 50),
                       ),
-                      onPressed: () {},
-                      child: const Text('Add item to bag'),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                  'Bạn muốn bán lại cho khách với giá:'),
+                              content: TextField(
+                                controller: actualPriceController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                    hintText: 'Giá thực tế sản phẩm'),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Get the values from the input fields
+                                    final productId = products[getIndex].id;
+                                    final actualPrice = double.parse(
+                                        actualPriceController.text);
+
+                                    // Call the addToCart API
+                                    ApiService.addToCart(productId, actualPrice)
+                                        .then((statusCode) {
+                                      Navigator.pop(
+                                          context); // Close the dialog
+                                      if (statusCode == 200) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Success'),
+                                              content: const Text(
+                                                  'Thêm vào giỏ hàng thành công'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context); // Close the success dialog
+                                                  },
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Error'),
+                                              content: const Text(
+                                                  'Giá bán lại không được thấp quá 90% giá phân phối,'
+                                                  ' hoặc lớn hơn giá phân phối'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context); // Close the error dialog
+                                                  },
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
+                                  },
+                                  child: const Text('Confirm'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Add item to cart'),
                     ),
                   ),
                 ],

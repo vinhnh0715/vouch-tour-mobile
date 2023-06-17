@@ -1,3 +1,4 @@
+import 'package:vouch_tour_mobile/pages/main_pages/cart_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/home_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/inventory_page.dart';
 import 'package:vouch_tour_mobile/pages/login_page.dart';
@@ -18,5 +19,6 @@ var appRoutes = {
   "/profile": (context) => ProfilePage(),
   "/createnewtour": (context) => TourPage(),
   "/categorylist": (context) => CategoryListPage(),
+  "/cartpage": (context) => CartPage(),
   //"/listproductbycategoryid": (context) => ListProductByCategoryId(),
 };
