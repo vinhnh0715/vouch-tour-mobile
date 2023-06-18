@@ -126,28 +126,30 @@ class CartPage extends ConsumerWidget {
                   const Text('Menu này được áp dụng coupon bởi:'),
                   const Gap(12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        width: 1,
-                        color: const Color(0xFF843667),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          ApiService.currentUserId,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color(0xFF843667),
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              ApiService.currentUserId,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
                   const Gap(12),
                   const Divider(),
                   Consumer(builder: (context, ref, _) {
@@ -156,31 +158,46 @@ class CartPage extends ConsumerWidget {
                     return cartItemsAsyncValue.when(
                       data: (cartItems) {
                         final totalPrice = _calculateTotalPrice(cartItems);
+                        final totalItems = cartItems.length;
 
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Total:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF843667),
+                            Text(
+                              'Tổng số lượng sản phẩm: $totalItems',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
                               ),
                             ),
-                            Text(
-                              '${totalPrice.toStringAsFixed(2)} VND',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF843667),
-                              ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tổng giá trị giỏ hàng:',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF843667),
+                                  ),
+                                ),
+                                Text(
+                                  '${totalPrice.toStringAsFixed(2)} VND',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF843667),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         );
                       },
                       loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('Error loading cart items'),
+                      error: (_, __) => const Text(
+                          'Your cart is empty, cant calculate total'),
                     );
                   }),
                 ],

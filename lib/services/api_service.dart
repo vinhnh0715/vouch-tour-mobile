@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:vouch_tour_mobile/models/cart_model.dart';
+import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'dart:convert';
 import 'package:vouch_tour_mobile/models/product_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
@@ -163,5 +164,45 @@ class ApiService {
     );
 
     return response.statusCode;
+  }
+
+  // ========================= GROUPS API ==============================
+  static Future<List<Group>> fetchGroups() async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> groupsJson = json.decode(response.body);
+      return groupsJson.map((json) => Group.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch groups');
+    }
+  }
+
+  // Create group
+  static Future<void> createGroup(Group group) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups');
+    final body = jsonEncode(group.toJson());
+
+    await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: body,
+    );
   }
 }
