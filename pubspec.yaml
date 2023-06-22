@@ -54,6 +54,8 @@ dependencies:
   flutter_riverpod: ^2.3.3
   gap: ^2.0.1
   intl: ^0.18.1
+  firebase_messaging: ^14.6.3
+  firebase_analytics: ^10.4.3
 
 dev_dependencies:
   flutter_test:
