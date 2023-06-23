@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vouch_tour_mobile/pages/backup_pages/cart_page.dart';
-import 'package:vouch_tour_mobile/pages/backup_pages/category_list_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/group_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/menu_page.dart';
-import 'package:vouch_tour_mobile/pages/backup_pages/tour_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
 //import 'package:vouch_tour_mobile/utils/drawer.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
-import 'package:vouch_tour_mobile/pages/backup_pages/inventory_page.dart';
-import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
-
-import '../product_pages/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   void _navigateToPage(int pageIndex) {
     _pageController.animateToPage(
       pageIndex,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -51,49 +45,6 @@ class _HomePageState extends State<HomePage> {
 
         body: Column(
           children: [
-            // SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 16),
-            //   child: _currentPageIndex == 0
-            //       ? Row(
-            //           children: [
-            //             Container(
-            //               decoration: BoxDecoration(
-            //                 color: Colors.white,
-            //                 borderRadius: BorderRadius.circular(8),
-            //                 border: Border.all(
-            //                   color: Colors.black,
-            //                   width: 1,
-            //                 ),
-            //               ),
-            //               child: IconButton(
-            //                 icon: Icon(Icons.qr_code),
-            //                 onPressed: () {
-            //                   // Add your QR code scanning logic here
-            //                 },
-            //               ),
-            //             ),
-            //             SizedBox(width: 10),
-            //             Expanded(
-            //               child: TextField(
-            //                 decoration: InputDecoration(
-            //                   hintText: 'Search',
-            //                 ),
-            //                 onChanged: (value) {
-            //                   // Add your search logic here
-            //                 },
-            //               ),
-            //             ),
-            //             IconButton(
-            //               icon: Icon(Icons.search),
-            //               onPressed: () {
-            //                 // Add your search logic here
-            //               },
-            //             ),
-            //           ],
-            //         )
-            //       : null,
-            // ),
             Expanded(
               child: PageView(
                 controller: _pageController,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:vouch_tour_mobile/models/cart_model.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/product_list_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
+
+import 'components/continue_shopping_alert_dialog.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -53,7 +56,7 @@ class _CartPageState extends State<CartPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: const Text('Please enter a menu title.'),
+            content: const Text('Hãy nhập tiêu đề cho menu!'),
             actions: [
               ElevatedButton(
                 onPressed: () {
@@ -81,46 +84,43 @@ class _CartPageState extends State<CartPage> {
       if (statusCode == 201) {
         // Menu created successfully
         Navigator.pop(context); // Close the cart page
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: 'Created Menu Successfully!',
+        );
       } else {
         // Show an error message if the API call was not successful
-        showDialog(
+        QuickAlert.show(
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Failed to create the menu.'),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
+          type: QuickAlertType.error,
+          title: 'Error',
+          text: 'Fail to create menu!',
         );
       }
     } catch (e) {
       // Show an error message if an exception occurred during the API call
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred while creating the menu.'),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Sorry, something went wrong',
       );
     }
+  }
+
+  Future<void> navigateToProductListPage() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProviderScope(
+          child: ProductListPage(),
+        ),
+      ),
+    );
+
+    // Refresh the cart page after returning from the product list page
+    fetchCartItems();
   }
 
   @override
@@ -188,7 +188,7 @@ class _CartPageState extends State<CartPage> {
                   ),
                 Container(
                   padding: const EdgeInsets.only(
-                    top: 20.0,
+                    top: 10.0,
                     left: 20.0,
                     right: 20.0,
                   ),
@@ -204,77 +204,80 @@ class _CartPageState extends State<CartPage> {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: ListView.builder(
-                      itemCount: cartItems.length,
-                      itemBuilder: (context, index) {
-                        final item = cartItems[index];
-                        return Container(
-                          height:
-                              100, // Adjust the desired height for each item
-                          child: Card(
-                            child: Container(
-                              color: Colors.white,
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: double.infinity,
-                                      child: Image.network(
-                                        item.images.isNotEmpty
-                                            ? item.images[0].fileURL
-                                            : '',
-                                        fit: BoxFit.cover,
+                  child: Scrollbar(
+                    thickness: 8.0,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      child: ListView.builder(
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          final item = cartItems[index];
+                          return Container(
+                            height:
+                                120, // Adjust the desired height for each item
+                            child: Card(
+                              child: Container(
+                                color: Colors.white,
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        height: double.infinity,
+                                        child: Image.network(
+                                          item.images.isNotEmpty
+                                              ? item.images[0].fileURL
+                                              : '',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item.productName,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.productName,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                          const Gap(6),
-                                          Text(
-                                            item.description.length > 20
-                                                ? '${item.description.substring(0, 20)}...' // Truncate description if it exceeds 20 characters
-                                                : item.description,
-                                            style: TextStyle(
-                                              color: Colors.grey.shade500,
-                                              fontSize: 12,
+                                            const Gap(6),
+                                            Text(
+                                              item.description.length > 20
+                                                  ? '${item.description.substring(0, 20)}...'
+                                                  : item.description,
+                                              style: TextStyle(
+                                                color: Colors.grey.shade500,
+                                                fontSize: 12,
+                                              ),
                                             ),
-                                          ),
-                                          const Gap(4),
-                                          Text(
-                                            '${item.actualPrice} VND',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                            const Gap(4),
+                                            Text(
+                                              '${item.actualPrice} VND',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -284,12 +287,12 @@ class _CartPageState extends State<CartPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Total Items: ${cartItems.length}',
+                        'Tổng số lượng sản phẩm:   ${cartItems.length} sản phẩm',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Total Price: \$${getTotalPrice().toStringAsFixed(2)}',
+                        'Total giá trị menu:    ${getTotalPrice().toStringAsFixed(2)} VND',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -301,7 +304,7 @@ class _CartPageState extends State<CartPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             // Continue Shopping button logic
                             Navigator.push(
                               context,
@@ -310,17 +313,37 @@ class _CartPageState extends State<CartPage> {
                                   child: ProductListPage(),
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              fetchCartItems();
+                            });
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.blue, // Set the background color to blue
+                          ),
                           child: const Text('Continue Shopping'),
                         ),
                       ),
                       const SizedBox(width: 16.0),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            createMenuAndClosePage();
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CustomAlertDialog(
+                                title: 'Confirmation',
+                                description:
+                                    'Are you sure you want to confirm the cart?',
+                                onContinuePressed: () async {
+                                  await createMenuAndClosePage();
+                                  fetchCartItems();
+                                },
+                              ),
+                            );
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
                           child: const Text('Confirm Cart'),
                         ),
                       ),

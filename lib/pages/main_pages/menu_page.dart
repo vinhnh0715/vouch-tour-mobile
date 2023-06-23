@@ -34,6 +34,20 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  Future<void> navigateToCartPage() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProviderScope(
+          child: CartPage(),
+        ),
+      ),
+    );
+
+    // Refresh the menu page after returning from the cart page
+    fetchMenus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -155,17 +169,10 @@ class _MenuPageState extends State<MenuPage> {
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProviderScope(
-                child: CartPage(),
-              ),
-            ),
-          );
+          navigateToCartPage();
         },
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_link_outlined),
       ),
     );
   }

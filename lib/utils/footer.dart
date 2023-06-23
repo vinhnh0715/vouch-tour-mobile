@@ -23,9 +23,8 @@ class AppFooter extends StatelessWidget {
           children: [
             _buildBottomNavItem(Icons.home, 'Trang chủ', 0, context),
             _buildBottomNavItem(Icons.shopping_cart, 'Giỏ hàng', 1, context),
-            _buildBottomNavItem(
-                Icons.book_outlined, 'Quản lý tour', 2, context),
-            _buildBottomNavItem(Icons.inventory, 'Sản phẩm', 3, context),
+            _buildBottomNavItem(Icons.book_outlined, 'Nhóm tour', 2, context),
+            _buildBottomNavItem(Icons.menu_book, 'Menu', 3, context),
             _buildBottomNavItem(
                 Icons.account_circle_outlined, 'Tài khoản', 4, context),
           ],
