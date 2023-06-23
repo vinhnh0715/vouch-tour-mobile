@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:vouch_tour_mobile/models/cart_model.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
+import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'dart:convert';
 import 'package:vouch_tour_mobile/models/product_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
@@ -72,6 +73,28 @@ class ApiService {
       return productsJson.map((json) => Product.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch products');
+    }
+  }
+
+  static Future<List<Product>> fetchProductsByCategoryId(
+      String categoryId) async {
+    String jwtToken =
+        ApiService.jwtToken; // Get the JWT token from the ApiService
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(
+          ApiService.currentEmail); // Fetch the JWT token if it's empty
+    }
+
+    final url = Uri.parse('${baseUrl}categories/$categoryId/products');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> productsJson = json.decode(response.body);
+      return productsJson.map((json) => Product.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch products by category ID');
     }
   }
 
@@ -204,5 +227,77 @@ class ApiService {
       },
       body: body,
     );
+  }
+
+  // Get group by ID
+  static Future<Group> getGroupById(String id) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups/$id');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> groupJson = json.decode(response.body);
+      return Group.fromJson(groupJson);
+    } else {
+      throw Exception('Failed to fetch group');
+    }
+  }
+
+  // ========================= MENU API ==============================
+  // Get all Menu of tourguide
+  static Future<List<Menu>> fetchMenus() async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> menusJson = json.decode(response.body);
+      return menusJson.map((json) => Menu.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch menus');
+    }
+  }
+
+  static Future<int> createMenu(
+      String title, List<Map<String, dynamic>> productMenus) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus');
+    final body = jsonEncode({
+      'title': title,
+      'productMenus': productMenus,
+    });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: body,
+    );
+
+    return response.statusCode;
   }
 }
