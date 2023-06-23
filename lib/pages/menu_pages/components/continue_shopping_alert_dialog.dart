@@ -47,7 +47,7 @@ class CustomAlertDialog extends StatelessWidget {
               },
               child: Center(
                 child: Text(
-                  'Continue',
+                  'Tiếp tục',
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Theme.of(context).primaryColor,
@@ -74,7 +74,7 @@ class CustomAlertDialog extends StatelessWidget {
               },
               child: const Center(
                 child: Text(
-                  'Cancel',
+                  'Hủy',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.normal,

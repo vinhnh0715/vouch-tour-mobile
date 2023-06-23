@@ -24,6 +24,9 @@ class ProductListPage extends ConsumerWidget {
     final itemBag = ref.watch(itemBagProvider);
     return ProviderScope(
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Thêm sản phẩm vào menu'),
+        ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 20.0),
           child: SingleChildScrollView(

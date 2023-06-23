@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'package:vouch_tour_mobile/pages/menu_pages/cart_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
@@ -19,6 +20,7 @@ class _MenuPageState extends State<MenuPage> {
     fetchMenus();
   }
 
+// get data from api to fetch
   Future<void> fetchMenus() async {
     try {
       final fetchedMenus = await ApiService.fetchMenus();
@@ -34,6 +36,7 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+// fetch data again when come back
   Future<void> navigateToCartPage() async {
     await Navigator.push(
       context,
@@ -46,6 +49,46 @@ class _MenuPageState extends State<MenuPage> {
 
     // Refresh the menu page after returning from the cart page
     fetchMenus();
+  }
+
+  void showDeleteConfirmationDialog(BuildContext context, Menu menu) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Do you want to delete?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteMenu(menu);
+                fetchMenus();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteMenu(Menu menu) async {
+    try {
+      await ApiService.deleteMenu(menu.id);
+      setState(() {
+        menus.remove(menu);
+      });
+    } catch (e) {
+      print('Error deleting menu: $e');
+      // Handle the error as per your requirement
+    }
   }
 
   @override
@@ -69,11 +112,9 @@ class _MenuPageState extends State<MenuPage> {
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(
-                          left: 16.0,
-                          top: 16.0,
-                        ),
+                            left: 16.0, top: 16.0, bottom: 10.0),
                         child: Text(
-                          'Menu Page',
+                          'Quản lý danh sách các menu',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -152,8 +193,8 @@ class _MenuPageState extends State<MenuPage> {
                                         icon: const Icon(Icons.delete),
                                         color: Colors.red,
                                         onPressed: () {
-                                          // Delete button logic
-                                          // Add your code here
+                                          showDeleteConfirmationDialog(
+                                              context, menu);
                                         },
                                       ),
                                     ],

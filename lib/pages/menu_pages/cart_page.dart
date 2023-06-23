@@ -195,7 +195,7 @@ class _CartPageState extends State<CartPage> {
                   child: const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Thêm sản phẩm vào menu:',
+                      'Sản phẩm đã được thêm vào menu:',
                       style: TextStyle(
                         fontSize: 14,
                       ),
@@ -222,7 +222,7 @@ class _CartPageState extends State<CartPage> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      flex: 1,
+                                      flex: 2,
                                       child: Container(
                                         height: double.infinity,
                                         child: Image.network(
@@ -270,6 +270,52 @@ class _CartPageState extends State<CartPage> {
                                           ],
                                         ),
                                       ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Xác nhận'),
+                                            content: const Text(
+                                                'Bạn có chắc muốn xóa sản phẩm này khỏi menu?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () async {
+                                                  Navigator.pop(
+                                                      context); // Close the dialog
+
+                                                  try {
+                                                    final item =
+                                                        cartItems[index];
+                                                    await ApiService
+                                                        .deleteCartItem(
+                                                            item.cartId,
+                                                            item.id);
+
+                                                    setState(() {
+                                                      cartItems.removeAt(index);
+                                                    });
+                                                  } catch (e) {
+                                                    print(
+                                                        'Error deleting item: $e');
+                                                  }
+                                                },
+                                                child: const Text('Xóa'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(
+                                                      context); // Close the dialog
+                                                },
+                                                child: const Text('Hủy'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -321,7 +367,7 @@ class _CartPageState extends State<CartPage> {
                             backgroundColor:
                                 Colors.blue, // Set the background color to blue
                           ),
-                          child: const Text('Continue Shopping'),
+                          child: const Text('Thêm sản phẩm'),
                         ),
                       ),
                       const SizedBox(width: 16.0),
@@ -331,9 +377,9 @@ class _CartPageState extends State<CartPage> {
                             showDialog(
                               context: context,
                               builder: (context) => CustomAlertDialog(
-                                title: 'Confirmation',
+                                title: 'Xác nhận',
                                 description:
-                                    'Are you sure you want to confirm the cart?',
+                                    'Tạo menu mới với những sản phẩm hiện tại?',
                                 onContinuePressed: () async {
                                   await createMenuAndClosePage();
                                   fetchCartItems();
@@ -344,7 +390,7 @@ class _CartPageState extends State<CartPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                           ),
-                          child: const Text('Confirm Cart'),
+                          child: const Text('Tạo Menu'),
                         ),
                       ),
                     ],

@@ -146,6 +146,7 @@ class ApiService {
   }
 
   // ========================= CART API ==============================
+  //get all item in cart
   static Future<List<CartItem>> fetchCartItems() async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
@@ -165,6 +166,7 @@ class ApiService {
     }
   }
 
+  // add item to cart
   static Future<int> addToCart(String productId, double actualPrice) async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
@@ -187,6 +189,25 @@ class ApiService {
     );
 
     return response.statusCode;
+  }
+
+  //delete item in cart
+  static Future<void> deleteCartItem(String cartId, String itemId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}carts/$cartId/items/$itemId');
+    final response = await http.delete(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      print('Item deleted successfully');
+    } else {
+      throw Exception('Failed to delete item from the cart');
+    }
   }
 
   // ========================= GROUPS API ==============================
@@ -276,6 +297,7 @@ class ApiService {
     }
   }
 
+  // create menu
   static Future<int> createMenu(
       String title, List<Map<String, dynamic>> productMenus) async {
     String jwtToken = ApiService.jwtToken;
@@ -299,5 +321,26 @@ class ApiService {
     );
 
     return response.statusCode;
+  }
+
+  // delete menu by id
+  static Future<void> deleteMenu(String menuId) async {
+    final url = Uri.parse('${baseUrl}menus/$menuId');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Menu deleted successfully');
+    } else if (response.statusCode == 401) {
+      // Handle token expiration or invalid token error
+      throw Exception('Unauthorized request');
+    } else {
+      throw Exception('Failed to delete menu');
+    }
   }
 }
