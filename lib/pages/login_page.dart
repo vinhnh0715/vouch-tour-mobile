@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         alignment: Alignment.center,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -113,9 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                 width: 250,
                 height: 150,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _isLoading // Check the loading state to show loading indicator or login buttons
-                  ? CircularProgressIndicator() // Show loading indicator
+                  ? const CircularProgressIndicator() // Show loading indicator
                   : Container(
                       width: 200,
                       height: 50, // Adjust the width as needed
@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                             } else {
                               // Error signing in, display an error message
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content:
                                       Text("Failed to sign in with Google."),
                                 ),
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: 24,
                           height: 24,
                         ),
-                        label: Text(
+                        label: const Text(
                           "Login with Google",
                           style: TextStyle(
                             fontSize: 16,
