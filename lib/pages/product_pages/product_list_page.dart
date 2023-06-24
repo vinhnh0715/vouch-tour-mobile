@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:vouch_tour_mobile/controllers/itembag_controller.dart';
 import 'package:vouch_tour_mobile/controllers/product_controller.dart';
-//import 'package:flutter_ecommerce/views/detail_page.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/components/chip_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-
-//import '../widgets/ads_banner_widget.dart';
-import 'package:vouch_tour_mobile/pages/product_pages/components/card_widget.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/detail_product_page.dart';
-//import 'cart_page.dart';
+
+import 'components/card_widget.dart';
 
 final currentIndexProvider = StateProvider<int>((ref) {
   return 0;
 });
 
 class ProductListPage extends ConsumerWidget {
-  const ProductListPage({super.key});
+  const ProductListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,12 +24,25 @@ class ProductListPage extends ConsumerWidget {
     final itemBag = ref.watch(itemBagProvider);
     return ProviderScope(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
+        appBar: AppBar(
+          title: const Text('Thêm sản phẩm vào menu'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 20.0),
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                // Chip section
+                const Gap(20),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    // Handle search query changes
+                  },
+                ),
+                SizedBox(height: 10.0),
                 SizedBox(
                   height: 50,
                   child: ListView(
@@ -48,7 +58,6 @@ class ProductListPage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                // Hot sales section
                 const Gap(12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,7 +69,6 @@ class ProductListPage extends ConsumerWidget {
                             color: Colors.redAccent)),
                   ],
                 ),
-
                 Container(
                   padding: const EdgeInsets.all(4),
                   width: double.infinity,
@@ -72,12 +80,12 @@ class ProductListPage extends ConsumerWidget {
                     shrinkWrap: true,
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: () {
-                        // Navigate to the detail product page for the tapped product
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProviderScope(
-                                child: DetailProductPage(getIndex: index)),
+                              child: DetailProductPage(getIndex: index),
+                            ),
                           ),
                         );
                       },
@@ -85,8 +93,6 @@ class ProductListPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-
-                // Featured products
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
@@ -97,27 +103,29 @@ class ProductListPage extends ConsumerWidget {
                         )),
                   ],
                 ),
-
                 MasonryGridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: products.length,
                   shrinkWrap: true,
                   gridDelegate:
                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                    crossAxisCount: 2,
+                  ),
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProviderScope(
-                              child: DetailProductPage(getIndex: index)),
-                        )),
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProviderScope(
+                          child: DetailProductPage(getIndex: index),
+                        ),
+                      ),
+                    ),
                     child: SizedBox(
                       height: 250,
                       child: ProductCardWidget(productIndex: index),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
