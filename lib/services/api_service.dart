@@ -210,6 +210,25 @@ class ApiService {
     }
   }
 
+  //delete item in cart
+  static Future<void> deleteAllItemInCart(String cartId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}carts/$cartId');
+    final response = await http.delete(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      print('Clear items in cart successfully');
+    } else {
+      throw Exception('Failed to clear items in the cart');
+    }
+  }
+
   // ========================= GROUPS API ==============================
   static Future<List<Group>> fetchGroups() async {
     String jwtToken = ApiService.jwtToken;

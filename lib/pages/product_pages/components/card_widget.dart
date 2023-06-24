@@ -42,7 +42,17 @@ class ProductCardWidget extends ConsumerWidget {
               color: const Color(0xFFE8F6FB),
               // ...
               child: Image.network(
-                  product.images.isNotEmpty ? product.images[0].fileURL : ''),
+                product.images.isNotEmpty ? product.images[0].fileURL : '',
+                errorBuilder: (context, error, stackTrace) {
+                  if (error is Exception && error.toString().contains('403')) {
+                    return Image.network(
+                      'https://www.howtogeek.com/wp-content/uploads/2022/05/frowning-BSOD-Header.png?height=200p&trim=2,2,2,2&crop=16:9',
+                    );
+                  } else {
+                    return Text('Failed to load image');
+                  }
+                },
+              ),
             ),
           ),
           const Gap(4),

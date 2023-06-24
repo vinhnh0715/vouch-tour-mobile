@@ -78,24 +78,24 @@ class Product {
 }
 
 class Image {
-  String id;
+  //String id;
   String fileURL;
   String fileName;
-  String productId;
+  //String productId;
 
   Image({
-    required this.id,
+    //required this.id,
     required this.fileURL,
     required this.fileName,
-    required this.productId,
+    //required this.productId,
   });
 
   factory Image.fromJson(Map<String, dynamic> json) {
     return Image(
-      id: json['id'],
+      //id: json['id'],
       fileURL: json['fileURL'],
       fileName: json['fileName'],
-      productId: json['productId'],
+      //productId: json['productId'],
     );
   }
 }
@@ -105,14 +105,16 @@ class Supplier {
   String supplierName;
   String address;
   String phoneNumber;
-  String adminId;
+  String email;
+  // String adminId;
 
   Supplier({
     required this.id,
     required this.supplierName,
     required this.address,
     required this.phoneNumber,
-    required this.adminId,
+    required this.email,
+    //required this.adminId,
   });
 
   factory Supplier.fromJson(Map<String, dynamic> json) {
@@ -121,7 +123,8 @@ class Supplier {
       supplierName: json['supplierName'],
       address: json['address'],
       phoneNumber: json['phoneNumber'],
-      adminId: json['adminId'],
+      email: json['email'],
+      //adminId: json['adminId'],
     );
   }
 }

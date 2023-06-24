@@ -56,17 +56,22 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Do you want to delete?'),
+          title: const Text('Xác nhận'),
+          content: const Text('Bạn có muốn xóa menu này?'),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: const Text('Hủy'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Yes'),
+              child: const Text(
+                'Xóa',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 deleteMenu(menu);

@@ -43,15 +43,6 @@ class DetailProductPage extends ConsumerWidget {
             color: Colors.black,
           ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 20),
-        //     child: IconButton(
-        //       onPressed: () {},
-        //       icon: const Icon(Icons.local_mall),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -61,9 +52,17 @@ class DetailProductPage extends ConsumerWidget {
               height: 300,
               width: double.infinity,
               color: const Color(0xFFE8F6FB),
-              child: Image.network(products[getIndex].images.isNotEmpty
-                  ? products[getIndex].images[0].fileURL
-                  : ''),
+              child: Image.network(
+                products[getIndex].images.isNotEmpty
+                    ? products[getIndex].images[0].fileURL
+                    : '',
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.network(
+                    'https://www.howtogeek.com/wp-content/uploads/2022/05/frowning-BSOD-Header.png?height=200p&trim=2,2,2,2&crop=16:9',
+                  );
+                },
+              ),
             ),
             Container(
               padding: const EdgeInsets.all(30),
