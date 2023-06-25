@@ -4,6 +4,7 @@ import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'dart:convert';
 import 'package:vouch_tour_mobile/models/product_model.dart';
+import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
 import 'package:vouch_tour_mobile/models/tour_guide_model.dart';
 
@@ -360,6 +361,29 @@ class ApiService {
       throw Exception('Unauthorized request');
     } else {
       throw Exception('Failed to delete menu');
+    }
+  }
+
+  // Get all products in a menu
+  static Future<List<ProductMenu>> fetchProductsInMenu(String menuId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus/$menuId/products-menu');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> productsJson = json.decode(response.body);
+      return productsJson.map((json) => ProductMenu.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch products in menu');
     }
   }
 }

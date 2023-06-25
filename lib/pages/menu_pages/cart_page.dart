@@ -95,7 +95,7 @@ class _CartPageState extends State<CartPage> {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.success,
-          text: 'Created Menu Successfully!',
+          text: 'Tạo menu thành công!',
         );
       } else if (productMenus.isEmpty) {
         // Menu created successfully
@@ -103,7 +103,7 @@ class _CartPageState extends State<CartPage> {
         QuickAlert.show(
           context: context,
           type: QuickAlertType.success,
-          text: 'You have created empty Menu!',
+          text: 'Bạn đã tạo menu trống!',
         );
       } else {
         // Show an error message if the API call was not successful
@@ -361,7 +361,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Total giá trị menu:    ${getTotalPrice().toStringAsFixed(2)} VND',
+                        'Tổng giá trị menu:    ${getTotalPrice().toStringAsFixed(2)} VND',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

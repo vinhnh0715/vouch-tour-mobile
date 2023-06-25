@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'package:vouch_tour_mobile/pages/menu_pages/cart_page.dart';
+import 'package:vouch_tour_mobile/pages/menu_pages/menu_detail_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class MenuPage extends StatefulWidget {
@@ -72,9 +72,9 @@ class _MenuPageState extends State<MenuPage> {
                   color: Colors.red,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                deleteMenu(menu);
+                await deleteMenu(menu);
                 fetchMenus();
               },
             ),
@@ -150,7 +150,7 @@ class _MenuPageState extends State<MenuPage> {
                               child: Row(
                                 children: [
                                   Image.asset(
-                                    'lib/assets/images/tour_logo.png',
+                                    'lib/assets/images/menu.png',
                                     width: 80,
                                     height: 80,
                                   ),
@@ -160,12 +160,24 @@ class _MenuPageState extends State<MenuPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          menu.title,
-                                          style: const TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MenuDetailPage(
+                                                        menuId: menu.id),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            menu.title,
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 8.0),
