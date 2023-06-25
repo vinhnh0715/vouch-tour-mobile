@@ -293,6 +293,36 @@ class ApiService {
     }
   }
 
+  // Update group
+  static Future<void> updateGroup(Group group) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups');
+    final body = jsonEncode(group.toJson());
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 204) {
+      print('Group updated successfully');
+    } else if (response.statusCode == 401) {
+      // Handle token expiration or invalid token error
+      throw Exception('Unauthorized request');
+    } else {
+      throw Exception(
+          'Failed to update group. Status code: ${response.statusCode} and ${response.body}');
+    }
+  }
+
   // ========================= MENU API ==============================
   // Get all Menu of tourguide
   static Future<List<Menu>> fetchMenus() async {

@@ -102,129 +102,145 @@ class _MenuPageState extends State<MenuPage> {
     final paddingValue = screenWidth * 0.1;
 
     return Scaffold(
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : menus.isEmpty
-              ? const Center(
-                  child: Text('No menus available'),
-                )
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: paddingValue),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, top: 16.0, bottom: 10.0),
-                        child: Text(
-                          'Quản lý danh sách các menu',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue,
+              Colors.white
+            ], // Adjust the colors as per your preference
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : menus.isEmpty
+                ? const Center(
+                    child: Text('No menus available'),
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: paddingValue),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              left: 16.0, top: 16.0, bottom: 10.0),
+                          child: Text(
+                            'Quản lý danh sách các menu',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: menus.length,
-                          itemBuilder: (context, index) {
-                            final menu = menus[index];
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: menus.length,
+                            itemBuilder: (context, index) {
+                              final menu = menus[index];
 
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0),
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 2,
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/menu.png',
-                                    width: 80,
-                                    height: 80,
-                                  ),
-                                  const SizedBox(width: 16.0),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MenuDetailPage(
-                                                        menuId: menu.id),
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'lib/assets/images/menu.png',
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    const SizedBox(width: 16.0),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MenuDetailPage(
+                                                    menuId: menu.id,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              menu.title,
+                                              style: const TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
                                               ),
-                                            );
-                                          },
-                                          child: Text(
-                                            menu.title,
-                                            style: const TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              'Quantity:',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Số lượng thành viên:',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 4.0),
-                                            Text(menu.quantity.toString()),
-                                          ],
+                                              const SizedBox(width: 4.0),
+                                              Text(
+                                                  menu.numOfProduct.toString()),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          color: Colors.grey,
+                                          onPressed: () {
+                                            // Edit button logic
+                                            // Add your code here
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          color: Colors.red,
+                                          onPressed: () {
+                                            showDeleteConfirmationDialog(
+                                                context, menu);
+                                          },
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        color: Colors.grey,
-                                        onPressed: () {
-                                          // Edit button logic
-                                          // Add your code here
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        color: Colors.red,
-                                        onPressed: () {
-                                          showDeleteConfirmationDialog(
-                                              context, menu);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           navigateToCartPage();

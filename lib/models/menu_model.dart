@@ -4,7 +4,7 @@ class Menu {
   final String id;
   final String title;
   final String tourGuideId;
-  final int quantity;
+  final int numOfProduct;
   final String status;
   final List<Product> products;
 
@@ -12,7 +12,7 @@ class Menu {
     required this.id,
     required this.title,
     required this.tourGuideId,
-    required this.quantity,
+    required this.numOfProduct,
     required this.status,
     required this.products,
   });
@@ -22,7 +22,7 @@ class Menu {
       id: json['id'],
       title: json['title'],
       tourGuideId: json['tourGuideId'],
-      quantity: json['quantity'],
+      numOfProduct: json['numOfProduct'],
       status: json['status'],
       products: json['products'] != null
           ? List<Product>.from(

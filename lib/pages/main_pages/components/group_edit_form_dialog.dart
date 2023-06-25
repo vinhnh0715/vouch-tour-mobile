@@ -1,25 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
+import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
+import 'package:collection/collection.dart';
 
-class GroupFormDialog extends StatefulWidget {
+class GroupEditFormDialog extends StatefulWidget {
+  final Group group;
   final Function(Group) onSubmit;
 
-  const GroupFormDialog({Key? key, required this.onSubmit}) : super(key: key);
+  const GroupEditFormDialog({
+    Key? key,
+    required this.group,
+    required this.onSubmit,
+  }) : super(key: key);
 
   @override
-  _GroupFormDialogState createState() => _GroupFormDialogState();
+  _GroupEditFormDialogState createState() => _GroupEditFormDialogState();
 }
 
-class _GroupFormDialogState extends State<GroupFormDialog> {
+class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
   TextEditingController groupNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   DateTime? startDate;
   DateTime? endDate;
+  // Declare a variable to hold the selected menu
+  List<Menu> menuList = [];
+  Menu? selectedMenu;
 
-  Future<void> createGroup() async {
+  @override
+  void initState() {
+    super.initState();
+    groupNameController.text = widget.group.groupName;
+    descriptionController.text = widget.group.description;
+    quantityController.text = widget.group.quantity.toString();
+    startDate = widget.group.startDate;
+    endDate = widget.group.endDate;
+    fetchMenuList().then((_) {
+      selectedMenu =
+          menuList.firstWhereOrNull((menu) => menu.id == widget.group.menuId);
+    });
+  }
+
+  Future<void> fetchMenuList() async {
+    try {
+      // Fetch the menu list from the API using ApiService
+      final menus = await ApiService.fetchMenus();
+      setState(() {
+        menuList = menus;
+      });
+    } catch (e) {
+      print('Failed to fetch menu list: $e');
+    }
+  }
+
+  Future<void> updateGroup() async {
     final groupName = groupNameController.text;
     final description = descriptionController.text;
     final quantity = int.tryParse(quantityController.text) ?? 0;
@@ -35,24 +71,26 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
       return;
     }
 
-    final newGroup = Group(
+    final updatedGroup = Group(
+      id: widget.group.id,
       groupName: groupName,
       description: description,
       quantity: quantity,
       startDate: startDate!,
       endDate: endDate!,
+      menuId: selectedMenu?.id ?? '',
     );
 
     try {
-      await ApiService.createGroup(newGroup);
+      await ApiService.updateGroup(updatedGroup);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tạo nhóm tour thành công')),
+        const SnackBar(content: Text('Group updated successfully')),
       );
-      widget.onSubmit(newGroup); // Call the onSubmit callback
+      widget.onSubmit(updatedGroup); // Call the onSubmit callback
       Navigator.of(context).pop(true); // Pop the dialog and return true
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tạo thất bại')),
+        SnackBar(content: Text('Update failed: $e')),
       );
     }
   }
@@ -60,7 +98,7 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create New Group'),
+      title: const Text('Edit Group'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -86,7 +124,7 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
                     onPressed: () {
                       showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: startDate ?? DateTime.now(),
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                       ).then((selectedDate) {
@@ -108,7 +146,7 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
                     onPressed: () {
                       showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: endDate ?? DateTime.now(),
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                       ).then((selectedDate) {
@@ -126,6 +164,21 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
                 ),
               ],
             ),
+            DropdownButton<Menu>(
+              value: selectedMenu,
+              onChanged: (Menu? newValue) {
+                setState(() {
+                  selectedMenu = newValue;
+                });
+              },
+              items: menuList.map<DropdownMenuItem<Menu>>((Menu menu) {
+                return DropdownMenuItem<Menu>(
+                  value: menu,
+                  child: Text(menu.title),
+                );
+              }).toList(),
+              hint: const Text('Chọn Menu'),
+            ),
           ],
         ),
       ),
@@ -137,8 +190,8 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: createGroup, // Call the createGroup method
-          child: const Text('Create'),
+          onPressed: updateGroup, // Call the updateGroup method
+          child: const Text('Update'),
         ),
       ],
     );
