@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
@@ -83,14 +84,19 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
 
     try {
       await ApiService.updateGroup(updatedGroup);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Group updated successfully')),
-      );
       widget.onSubmit(updatedGroup); // Call the onSubmit callback
       Navigator.of(context).pop(true); // Pop the dialog and return true
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: 'Cập nhật nhóm thành công!',
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Update failed: $e')),
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Cập nhật nhóm thất bại!',
       );
     }
   }
