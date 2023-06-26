@@ -1,19 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
+import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
-//import 'package:vouch_tour_mobile/pages/main_pages/components/group_menu_page.dart';
-//import 'package:vouch_tour_mobile/pages/main_pages/components/group_orders_page.dart';
 
-class GroupPageDetail extends StatelessWidget {
+class GroupPageDetail extends StatefulWidget {
   final Group group;
 
   const GroupPageDetail({required this.group});
 
   @override
+  _GroupPageDetailState createState() => _GroupPageDetailState();
+}
+
+class _GroupPageDetailState extends State<GroupPageDetail> {
+  late Future<List<ProductMenu>> _productsInMenuFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _productsInMenuFuture = fetchProductsInMenu();
+  }
+
+  Future<List<ProductMenu>> fetchProductsInMenu() async {
+    try {
+      final List<ProductMenu> productsInMenu =
+          await ApiService.fetchProductsInMenu(widget.group.menuId ?? '');
+      return productsInMenu;
+    } catch (e) {
+      // Handle error
+      return [];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Group Information"),
+        title: const Text("Thôn tin nhóm Tour"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,75 +48,84 @@ class GroupPageDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Group Name: ${group.groupName}',
+                'Tên nhóm: ${widget.group.groupName}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
+                  color: Colors.blue,
                 ),
               ),
               const SizedBox(height: 8.0),
-              Text('Description: ${group.description}'),
-              Text('Quantity: ${group.quantity}'),
-              Text('Start Date: ${group.startDate}'),
-              Text('End Date: ${group.endDate}'),
-              Text('Status: In Progress'),
+              Text('Mô tả nhóm: ${widget.group.description}'),
+              Text('Số lượng thành viên: ${widget.group.quantity}'),
+              Text(
+                  'Ngày bắt đầu: ${dateFormat.format(widget.group.startDate)}'),
+              Text('Ngày kết thúc: ${dateFormat.format(widget.group.endDate)}'),
+              const Text('Trạng thái: In Progress'),
+              Text('Menu Id: ${widget.group.menuId}'),
               const SizedBox(height: 16.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary:
-                            Colors.blue, // Set the background color to blue
-                      ),
-                      onPressed: () {
-                        // Handle "Add Cart for Group Menu" button tap
-                        // You can implement the desired functionality here
-                      },
-                      child: Text('Add Cart for Group Menu'),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary:
-                            Colors.blue, // Set the background color to blue
-                      ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => GroupMenuPage(group: group),
-                        //   ),
-                        // );
-                      },
-                      child: Text('View Menu Group'),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary:
-                            Colors.blue, // Set the background color to blue
-                      ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => GroupOrdersPage(group: group),
-                        //   ),
-                        // );
-                      },
-                      child: const Text('View Orders of Group'),
-                    ),
-                  ),
-                ],
+              const Text(
+                'Menu dành cho nhóm:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.deepPurple,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              FutureBuilder<List<ProductMenu>>(
+                future: _productsInMenuFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  } else {
+                    final productsInMenu = snapshot.data ?? [];
+                    if (productsInMenu.isNotEmpty) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: productsInMenu.length,
+                        itemBuilder: (context, index) {
+                          final productMenu = productsInMenu[index];
+                          return ListTile(
+                            leading: Container(
+                              width: 80, // Set the desired width
+                              height: 80, // Set the desired height
+                              child: Image.network(
+                                productMenu.images[0].fileURL,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            title: Text(productMenu.productName),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Mô tả sản phẩm: ${productMenu.description}'),
+                                Text(
+                                  'Giá: ${productMenu.actualPrice.toStringAsFixed(2)} VND',
+                                ),
+                                Text(
+                                    'Nhà cung cấp: ${productMenu.supplierName}'),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return const Text(
+                        'Không có sản phẩm nào trong menu.',
+                        style: TextStyle(color: Colors.red),
+                      );
+                    }
+                  }
+                },
               ),
             ],
           ),

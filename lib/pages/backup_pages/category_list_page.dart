@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vouch_tour_mobile/models/category_model.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/list_product_by_category_id.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/components/staggered_category_card.dart';

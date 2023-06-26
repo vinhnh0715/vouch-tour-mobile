@@ -32,11 +32,13 @@ class Group {
   // Serialize Group object to JSON
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'groupName': groupName,
       'description': description,
       'quantity': quantity,
       'endDate': endDate.toIso8601String(),
       'startDate': startDate.toIso8601String(),
+      'menuId': menuId,
     };
   }
 }

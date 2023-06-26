@@ -16,6 +16,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<CartItem> cartItems = [];
   bool isLoading = true;
+  String currentCartId = '';
   TextEditingController menuTitleController = TextEditingController();
 
   @override
@@ -27,6 +28,11 @@ class _CartPageState extends State<CartPage> {
   Future<void> fetchCartItems() async {
     try {
       final fetchedCartItems = await ApiService.fetchCartItems();
+      final firstCartItem =
+          fetchedCartItems.isNotEmpty ? fetchedCartItems[0] : null;
+      if (firstCartItem != null) {
+        currentCartId = firstCartItem.cartId;
+      }
       setState(() {
         cartItems = fetchedCartItems;
         isLoading = false;
@@ -81,13 +87,23 @@ class _CartPageState extends State<CartPage> {
 
     try {
       final statusCode = await ApiService.createMenu(title, productMenus);
-      if (statusCode == 201) {
+      if (statusCode == 201 && productMenus.isNotEmpty) {
+        // Menu created successfully
+        // Clear cart
+        await ApiService.deleteAllItemInCart(currentCartId);
+        Navigator.pop(context); // Close the cart page
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: 'Tạo menu thành công!',
+        );
+      } else if (productMenus.isEmpty) {
         // Menu created successfully
         Navigator.pop(context); // Close the cart page
         QuickAlert.show(
           context: context,
           type: QuickAlertType.success,
-          text: 'Created Menu Successfully!',
+          text: 'Bạn đã tạo menu trống!',
         );
       } else {
         // Show an error message if the API call was not successful
@@ -135,57 +151,52 @@ class _CartPageState extends State<CartPage> {
             )
           : Column(
               children: [
-                if (cartItems.isEmpty)
-                  const Center(
-                    child: Text('Chưa có sản phẩm nào được thêm vào menu'),
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: TextField(
-                      controller: menuTitleController,
-                      decoration: InputDecoration(
-                        labelText: "Nhập tiêu đề cho menu",
-                        prefixIcon: Icon(
-                          Icons.flag,
-                          color: menuTitleController.text.isNotEmpty
-                              ? Colors.lightBlueAccent
-                              : Colors.blue,
-                        ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(
-                            color: Colors.blue,
-                            width: 3,
-                          ),
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(
-                            color: Colors.blue,
-                            width: 3,
-                          ),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(
-                            color: Colors.lightBlueAccent,
-                            width: 3,
-                          ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: TextField(
+                    controller: menuTitleController,
+                    decoration: InputDecoration(
+                      labelText: "Nhập tiêu đề cho menu",
+                      prefixIcon: Icon(
+                        Icons.flag,
+                        color: menuTitleController.text.isNotEmpty
+                            ? Colors.lightBlueAccent
+                            : Colors.blue,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 3,
                         ),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          // Update the icon color when the text changes
-                          if (value.isNotEmpty) {
-                            menuTitleController.text.isNotEmpty
-                                ? Colors.lightBlueAccent
-                                : Colors.grey;
-                          }
-                        });
-                      },
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 3,
+                        ),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(
+                          color: Colors.lightBlueAccent,
+                          width: 3,
+                        ),
+                      ),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        // Update the icon color when the text changes
+                        if (value.isNotEmpty) {
+                          menuTitleController.text.isNotEmpty
+                              ? Colors.lightBlueAccent
+                              : Colors.grey;
+                        }
+                      });
+                    },
                   ),
+                ),
                 Container(
                   padding: const EdgeInsets.only(
                     top: 10.0,
@@ -197,136 +208,148 @@ class _CartPageState extends State<CartPage> {
                     child: Text(
                       'Sản phẩm đã được thêm vào menu:',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Scrollbar(
-                    thickness: 8.0,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      child: ListView.builder(
-                        itemCount: cartItems.length,
-                        itemBuilder: (context, index) {
-                          final item = cartItems[index];
-                          return Container(
-                            height:
-                                120, // Adjust the desired height for each item
-                            child: Card(
-                              child: Container(
-                                color: Colors.white,
-                                width: double.infinity,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        height: double.infinity,
-                                        child: Image.network(
-                                          item.images.isNotEmpty
-                                              ? item.images[0].fileURL
-                                              : '',
-                                          fit: BoxFit.cover,
+                if (cartItems.isEmpty)
+                  const Center(
+                    child: Text('Chưa có sản phẩm nào được thêm vào menu'),
+                  )
+                else
+                  Expanded(
+                    flex: 1,
+                    child: Scrollbar(
+                      thickness: 8.0,
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: ListView.builder(
+                          itemCount: cartItems.length,
+                          itemBuilder: (context, index) {
+                            final item = cartItems[index];
+                            return Container(
+                              height:
+                                  120, // Adjust the desired height for each item
+                              child: Card(
+                                child: Container(
+                                  color: Colors.white,
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          height: double.infinity,
+                                          child: Image.network(
+                                            item.images.isNotEmpty
+                                                ? item.images[0].fileURL
+                                                : '',
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.productName,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                      Expanded(
+                                        flex: 3,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item.productName,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            const Gap(6),
-                                            Text(
-                                              item.description.length > 20
-                                                  ? '${item.description.substring(0, 20)}...'
-                                                  : item.description,
-                                              style: TextStyle(
-                                                color: Colors.grey.shade500,
-                                                fontSize: 12,
+                                              const Gap(6),
+                                              Text(
+                                                item.description.length > 20
+                                                    ? '${item.description.substring(0, 20)}...'
+                                                    : item.description,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade500,
+                                                  fontSize: 12,
+                                                ),
                                               ),
-                                            ),
-                                            const Gap(4),
-                                            Text(
-                                              '${item.actualPrice} VND',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      color: Colors.red,
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text('Xác nhận'),
-                                            content: const Text(
-                                                'Bạn có chắc muốn xóa sản phẩm này khỏi menu?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () async {
-                                                  Navigator.pop(
-                                                      context); // Close the dialog
-
-                                                  try {
-                                                    final item =
-                                                        cartItems[index];
-                                                    await ApiService
-                                                        .deleteCartItem(
-                                                            item.cartId,
-                                                            item.id);
-
-                                                    setState(() {
-                                                      cartItems.removeAt(index);
-                                                    });
-                                                  } catch (e) {
-                                                    print(
-                                                        'Error deleting item: $e');
-                                                  }
-                                                },
-                                                child: const Text('Xóa'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(
-                                                      context); // Close the dialog
-                                                },
-                                                child: const Text('Hủy'),
+                                              const Gap(4),
+                                              Text(
+                                                '${item.actualPrice} VND',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: const Text('Xác nhận'),
+                                              content: const Text(
+                                                  'Bạn có chắc muốn xóa sản phẩm này khỏi menu?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context); // Close the dialog
+                                                  },
+                                                  child: const Text('Hủy'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    Navigator.pop(
+                                                        context); // Close the dialog
+
+                                                    try {
+                                                      final item =
+                                                          cartItems[index];
+                                                      await ApiService
+                                                          .deleteCartItem(
+                                                              item.cartId,
+                                                              item.id);
+
+                                                      setState(() {
+                                                        cartItems
+                                                            .removeAt(index);
+                                                      });
+                                                    } catch (e) {
+                                                      print(
+                                                          'Error deleting item: $e');
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                    'Xóa',
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -338,7 +361,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Total giá trị menu:    ${getTotalPrice().toStringAsFixed(2)} VND',
+                        'Tổng giá trị menu:    ${getTotalPrice().toStringAsFixed(2)} VND',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:vouch_tour_mobile/controllers/product_controller.dart';
-import 'package:vouch_tour_mobile/pages/product_pages/product_list_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
 class DetailProductPage extends ConsumerWidget {
@@ -13,7 +12,6 @@ class DetailProductPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = ref.watch(currentIndexProvider);
     final products = ref.watch(proudctNotifierProvider);
     final TextEditingController actualPriceController = TextEditingController();
 
@@ -43,15 +41,6 @@ class DetailProductPage extends ConsumerWidget {
             color: Colors.black,
           ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 20),
-        //     child: IconButton(
-        //       onPressed: () {},
-        //       icon: const Icon(Icons.local_mall),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -61,9 +50,17 @@ class DetailProductPage extends ConsumerWidget {
               height: 300,
               width: double.infinity,
               color: const Color(0xFFE8F6FB),
-              child: Image.network(products[getIndex].images.isNotEmpty
-                  ? products[getIndex].images[0].fileURL
-                  : ''),
+              child: Image.network(
+                products[getIndex].images.isNotEmpty
+                    ? products[getIndex].images[0].fileURL
+                    : '',
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.network(
+                    'https://www.howtogeek.com/wp-content/uploads/2022/05/frowning-BSOD-Header.png?height=200p&trim=2,2,2,2&crop=16:9',
+                  );
+                },
+              ),
             ),
             Container(
               padding: const EdgeInsets.all(30),
@@ -79,9 +76,68 @@ class DetailProductPage extends ConsumerWidget {
                     ).copyWith(color: const Color(0xFF843667)),
                   ),
                   const Gap(12),
+
                   // RatingBar and review code
-                  const Gap(8),
+                  Row(
+                    children: [
+                      RatingBar(
+                        itemSize: 20,
+                        initialRating: 4,
+                        minRating: 1,
+                        maxRating: 5,
+                        allowHalfRating: true,
+                        ratingWidget: RatingWidget(
+                          empty: const Icon(
+                            Icons.star_border,
+                            color: Colors.amber,
+                          ),
+                          full: const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          half: const Icon(
+                            Icons.star_half_sharp,
+                            color: Colors.amber,
+                          ),
+                        ),
+                        onRatingUpdate: (value) => null,
+                      ),
+                      const Gap(20),
+                      const Text('4953 review')
+                    ],
+                  ),
+
+                  const Gap(16),
+                  const Text(
+                    'Mô tả sản phẩm:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Gap(4),
                   Text(products[getIndex].description),
+                  const Gap(40),
+
+                  Row(
+                    children: [
+                      const Text(
+                        'Nhà cung cấp:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(products[getIndex].supplier.supplierName),
+                    ],
+                  ),
+
+                  const Gap(8),
+                  Row(
+                    children: [
+                      const Text(
+                        'Địa chỉ:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(products[getIndex].supplier.address),
+                    ],
+                  ),
                   const Gap(20),
 
                   Row(

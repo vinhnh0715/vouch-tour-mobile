@@ -42,7 +42,7 @@ class ProductListPage extends ConsumerWidget {
                     // Handle search query changes
                   },
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 SizedBox(
                   height: 50,
                   child: ListView(
@@ -59,9 +59,9 @@ class ProductListPage extends ConsumerWidget {
                   ),
                 ),
                 const Gap(12),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text('Hot Sales',
                         style: TextStyle(
                             fontSize: 20,
@@ -93,9 +93,9 @@ class ProductListPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text('Sản phẩm phổ biến',
                         style: TextStyle(
                           fontSize: 20,

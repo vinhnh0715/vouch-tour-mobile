@@ -4,6 +4,7 @@ import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/menu_model.dart';
 import 'dart:convert';
 import 'package:vouch_tour_mobile/models/product_model.dart';
+import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
 import 'package:vouch_tour_mobile/models/tour_guide_model.dart';
 
@@ -210,6 +211,25 @@ class ApiService {
     }
   }
 
+  //delete item in cart
+  static Future<void> deleteAllItemInCart(String cartId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}carts/$cartId');
+    final response = await http.delete(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      print('Clear items in cart successfully');
+    } else {
+      throw Exception('Failed to clear items in the cart');
+    }
+  }
+
   // ========================= GROUPS API ==============================
   static Future<List<Group>> fetchGroups() async {
     String jwtToken = ApiService.jwtToken;
@@ -270,6 +290,36 @@ class ApiService {
       return Group.fromJson(groupJson);
     } else {
       throw Exception('Failed to fetch group');
+    }
+  }
+
+  // Update group
+  static Future<void> updateGroup(Group group) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups');
+    final body = jsonEncode(group.toJson());
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 204) {
+      print('Group updated successfully');
+    } else if (response.statusCode == 401) {
+      // Handle token expiration or invalid token error
+      throw Exception('Unauthorized request');
+    } else {
+      throw Exception(
+          'Failed to update group. Status code: ${response.statusCode} and ${response.body}');
     }
   }
 
@@ -341,6 +391,29 @@ class ApiService {
       throw Exception('Unauthorized request');
     } else {
       throw Exception('Failed to delete menu');
+    }
+  }
+
+  // Get all products in a menu
+  static Future<List<ProductMenu>> fetchProductsInMenu(String menuId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus/$menuId/products-menu');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> productsJson = json.decode(response.body);
+      return productsJson.map((json) => ProductMenu.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch products in menu');
     }
   }
 }
