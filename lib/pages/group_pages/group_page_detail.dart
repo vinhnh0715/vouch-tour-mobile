@@ -4,6 +4,8 @@ import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
+import 'generator_page.dart';
+
 class GroupPageDetail extends StatefulWidget {
   final Group group;
 
@@ -39,7 +41,7 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Thôn tin nhóm Tour"),
+        title: const Text("Thông tin nhóm Tour"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -126,6 +128,20 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
                     }
                   }
                 },
+              ),
+              const SizedBox(
+                height: 6.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GenerateQrCodePage(),
+                    ),
+                  );
+                },
+                child: Text('Generate QR Code'),
               ),
             ],
           ),

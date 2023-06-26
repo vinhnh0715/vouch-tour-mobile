@@ -198,7 +198,7 @@ class _MenuPageState extends State<MenuPage> {
                                           Row(
                                             children: [
                                               const Text(
-                                                'Số lượng thành viên:',
+                                                'Số lượng sản phẩm:',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                 ),

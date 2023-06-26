@@ -4,7 +4,6 @@ import 'package:vouch_tour_mobile/controllers/product_controller.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/components/chip_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:vouch_tour_mobile/pages/product_pages/detail_product_page.dart';
 
@@ -35,7 +34,7 @@ class ProductListPage extends ConsumerWidget {
                 const Gap(20),
                 TextField(
                   decoration: const InputDecoration(
-                    labelText: 'Search',
+                    labelText: 'Tìm kiếm',
                     prefixIcon: Icon(Icons.search),
                   ),
                   onChanged: (value) {

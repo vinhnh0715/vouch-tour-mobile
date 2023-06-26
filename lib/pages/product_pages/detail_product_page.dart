@@ -278,7 +278,7 @@ class DetailProductPage extends ConsumerWidget {
                           },
                         );
                       },
-                      child: const Text('Add item to cart'),
+                      child: const Text('Thêm sản phẩm vào menu'),
                     ),
                   ),
                 ],

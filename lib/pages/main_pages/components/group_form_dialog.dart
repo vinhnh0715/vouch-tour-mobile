@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
@@ -45,14 +46,19 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
 
     try {
       await ApiService.createGroup(newGroup);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tạo nhóm tour thành công')),
-      );
       widget.onSubmit(newGroup); // Call the onSubmit callback
       Navigator.of(context).pop(true); // Pop the dialog and return true
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: 'Tạo nhóm thành công!',
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tạo thất bại')),
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Tạo nhóm thất bại!',
       );
     }
   }
