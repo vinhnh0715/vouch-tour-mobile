@@ -1,6 +1,6 @@
 class ProductMenu {
   final String menuId;
-  final String productId;
+  final String id;
   final String productName;
   final num actualPrice;
   final num supplierPrice;
@@ -13,7 +13,7 @@ class ProductMenu {
 
   ProductMenu({
     required this.menuId,
-    required this.productId,
+    required this.id,
     required this.productName,
     required this.actualPrice,
     required this.supplierPrice,
@@ -30,7 +30,7 @@ class ProductMenu {
 
     return ProductMenu(
       menuId: json['menuId'],
-      productId: json['productId'],
+      id: json['id'],
       productName: json['productName'],
       actualPrice: json['actualPrice'].toDouble(),
       supplierPrice: json['supplierPrice'].toDouble(),

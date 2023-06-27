@@ -26,8 +26,9 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
 
   Future<List<ProductMenu>> fetchProductsInMenu() async {
     try {
+      String? menuId = widget.group.menuId;
       final List<ProductMenu> productsInMenu =
-          await ApiService.fetchProductsInMenu(widget.group.menuId ?? '');
+          await ApiService.fetchProductsInMenu(menuId!);
       return productsInMenu;
     } catch (e) {
       // Handle error
