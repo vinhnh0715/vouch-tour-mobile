@@ -8,6 +8,8 @@ import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
 import 'package:vouch_tour_mobile/models/tour_guide_model.dart';
 
+import '../models/order_model.dart';
+
 class ApiService {
   static const String baseUrl =
       'https://vouch-tour-apis.azurewebsites.net/api/';
@@ -414,6 +416,27 @@ class ApiService {
       return productsJson.map((json) => ProductMenu.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch products in menu');
+    }
+  }
+
+  // ========================= TOURGUIDE API ==============================
+  // get all orders in group by group id
+  static Future<List<OrderModel>> fetchOrdersByGroupId(String groupId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups/$groupId/orders');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> ordersJson = json.decode(response.body);
+      return ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch orders by group ID');
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/product_menu_model.dart';
+import 'package:vouch_tour_mobile/pages/group_pages/group_order_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
 import 'generator_page.dart';
@@ -138,11 +139,27 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => GenerateQrCodePage(),
+                      builder: (context) =>
+                          GenerateQrCodePage(groupId: widget.group.id!),
                     ),
                   );
                 },
-                child: Text('Generate QR Code'),
+                child: Text('Show QR Code'),
+              ),
+              const SizedBox(
+                height: 6.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          GroupOrderPage(groupId: widget.group.id!),
+                    ),
+                  );
+                },
+                child: Text('View Orders'),
               ),
             ],
           ),
