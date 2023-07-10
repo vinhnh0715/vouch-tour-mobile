@@ -18,7 +18,7 @@ class _GenerateQrCodePageState extends State<GenerateQrCodePage> {
   void initState() {
     super.initState();
     qrData =
-        'https://customer-shopping-menu.vercel.app/#/menu&id=${widget.groupId}';
+        'https://customer-shopping-menu.vercel.app/menu?id=${widget.groupId}';
   }
 
   @override

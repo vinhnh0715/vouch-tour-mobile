@@ -435,6 +435,8 @@ class ApiService {
     if (response.statusCode == 200) {
       final List<dynamic> ordersJson = json.decode(response.body);
       return ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+    } else if (response.statusCode == 404) {
+      throw Exception('There is no order in this group');
     } else {
       throw Exception('Failed to fetch orders by group ID');
     }

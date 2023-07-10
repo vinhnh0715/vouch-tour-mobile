@@ -45,9 +45,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Text(
-              'Error: ${snapshot.error}',
-              style: const TextStyle(color: Colors.red),
+            return const Center(
+              child: Text(
+                //'Error: ${snapshot.error}',
+                'There is no order in this group',
+                style: TextStyle(color: Colors.red),
+              ),
             );
           } else {
             final orders = snapshot.data ?? [];

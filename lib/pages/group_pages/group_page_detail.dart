@@ -66,7 +66,6 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
                   'Ngày bắt đầu: ${dateFormat.format(widget.group.startDate)}'),
               Text('Ngày kết thúc: ${dateFormat.format(widget.group.endDate)}'),
               const Text('Trạng thái: In Progress'),
-              Text('Menu Id: ${widget.group.menuId}'),
               const SizedBox(height: 16.0),
               const Text(
                 'Menu dành cho nhóm:',

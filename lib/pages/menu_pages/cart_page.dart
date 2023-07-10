@@ -80,7 +80,8 @@ class _CartPageState extends State<CartPage> {
     final productMenus = cartItems
         .map((cartItem) => {
               'productId': cartItem.productId,
-              'resellPrice': cartItem.actualPrice,
+              'actualPrice': cartItem.actualPrice,
+              'supplierPrice': cartItem.supplierPrice,
               'description': cartItem.description,
             })
         .toList();
