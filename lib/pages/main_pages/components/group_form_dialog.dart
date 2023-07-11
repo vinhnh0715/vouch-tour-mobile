@@ -44,8 +44,8 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
       endDate: endDate!,
     );
 
-    try {
-      await ApiService.createGroup(newGroup);
+    final response = await ApiService.createGroup(newGroup);
+    if (response.statusCode == 201) {
       widget.onSubmit(newGroup); // Call the onSubmit callback
       Navigator.of(context).pop(true); // Pop the dialog and return true
       QuickAlert.show(
@@ -53,7 +53,7 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
         type: QuickAlertType.success,
         text: 'Tạo nhóm thành công!',
       );
-    } catch (e) {
+    } else {
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,

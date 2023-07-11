@@ -253,7 +253,25 @@ class ApiService {
   }
 
   // Create group
-  static Future<void> createGroup(Group group) async {
+  // static Future<void> createGroup(Group group) async {
+  //   String jwtToken = ApiService.jwtToken;
+  //   if (jwtToken.isEmpty) {
+  //     jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+  //   }
+
+  //   final url = Uri.parse('${baseUrl}groups');
+  //   final body = jsonEncode(group.toJson());
+
+  //   await http.post(
+  //     url,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $jwtToken',
+  //     },
+  //     body: body,
+  //   );
+  // }
+  static Future<http.Response> createGroup(Group group) async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
       jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
@@ -262,7 +280,7 @@ class ApiService {
     final url = Uri.parse('${baseUrl}groups');
     final body = jsonEncode(group.toJson());
 
-    await http.post(
+    final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -270,6 +288,8 @@ class ApiService {
       },
       body: body,
     );
+
+    return response;
   }
 
   // Get group by ID
@@ -322,6 +342,32 @@ class ApiService {
     } else {
       throw Exception(
           'Failed to update group. Status code: ${response.statusCode} and ${response.body}');
+    }
+  }
+
+  // delete group by id
+  static Future<void> deleteGroup(String groupId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups/$groupId');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 204) {
+      print('Group deleted successfully');
+    } else if (response.statusCode == 401) {
+      // Handle token expiration or invalid token error
+      throw Exception('Unauthorized request');
+    } else {
+      throw Exception('Failed to delete group');
     }
   }
 

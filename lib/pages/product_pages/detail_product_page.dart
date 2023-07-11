@@ -234,7 +234,7 @@ class DetailProductPage extends ConsumerWidget {
                                             return AlertDialog(
                                               title: const Text('Success'),
                                               content: const Text(
-                                                  'Thêm vào giỏ hàng thành công'),
+                                                  'Thêm vào menu thành công'),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
@@ -271,7 +271,7 @@ class DetailProductPage extends ConsumerWidget {
                                       }
                                     });
                                   },
-                                  child: const Text('Confirm'),
+                                  child: const Text('Xác nhận'),
                                 ),
                               ],
                             );
