@@ -469,4 +469,79 @@ class ApiService {
       throw Exception('Failed to fetch orders by group ID');
     }
   }
+
+  // ========================= ORDER API ==============================
+  //update order
+  static Future<void> updateOrder(String orderId, String title) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders');
+    final body = jsonEncode({
+      'id': orderId,
+      'status': title,
+    });
+
+    final response = await http.put(url,
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json',
+        },
+        body: body);
+
+    if (response.statusCode == 204) {
+      // Order updated successfully
+      print('Order updated');
+    } else {
+      throw Exception('Failed to update order');
+    }
+  }
+
+  // Get all Order of tourguide
+  static Future<List<OrderModel>> fetchOrders() async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> ordersJson = json.decode(response.body);
+      return ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch orders');
+    }
+  }
+
+  // Get Order detail by order id
+  static Future<OrderModel> getOrderByOrderId(String orderId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders/$orderId');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final orderJson = json.decode(response.body);
+      return OrderModel.fromJson(orderJson);
+    } else {
+      throw Exception('Failed to fetch order details');
+    }
+  }
 }

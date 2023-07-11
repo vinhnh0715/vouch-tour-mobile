@@ -13,10 +13,21 @@ var customLightTheme = ThemeData(
       fontSize: 20.0,
       fontWeight: FontWeight.bold,
     ),
-    // textTheme: Theme.of(context).textTheme,
   ),
 );
 
 var customDarkTheme = ThemeData(
-  brightness: Brightness.dark,
+  //brightness: Brightness.dark,
+  primarySwatch: Colors.deepPurple,
+  fontFamily: GoogleFonts.lato().fontFamily,
+  appBarTheme: const AppBarTheme(
+    color: Colors.black,
+    elevation: 0.0,
+    iconTheme: IconThemeData(color: Colors.white),
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20.0,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
 );

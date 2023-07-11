@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/order_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
+import '../order_pages/order_detail_page.dart';
+
 class GroupOrderPage extends StatefulWidget {
   final String groupId;
 
@@ -76,17 +78,28 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.3),
                                 blurRadius: 4.0,
-                                offset: Offset(0, 2),
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
                           child: SingleChildScrollView(
                             child: ListTile(
-                              title: Text(
-                                'Mã đơn hàng: ${order.id}',
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
+                              title: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          OrderDetailPage(orderId: order.id),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Mã đơn hàng: ${order.id}',
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               subtitle: SingleChildScrollView(
@@ -106,24 +119,44 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Handle Accept Order button tap
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
+                                        Visibility(
+                                          visible: order.status == "Waiting",
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              // Handle Accept Order button tap
+                                              await ApiService.updateOrder(
+                                                  order.id, "Completed");
+                                              setState(() {
+                                                // Refresh the widget by rebuilding the widget tree
+                                                _ordersFuture =
+                                                    fetchOrdersByGroupId();
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green,
+                                            ),
+                                            child: const Text('Nhận đơn'),
                                           ),
-                                          child: const Text('Nhận đơn'),
                                         ),
                                         const SizedBox(width: 36),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Handle Deny Order button tap
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
+                                        Visibility(
+                                          visible: order.status == "Waiting",
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              // Handle Deny Order button tap
+                                              await ApiService.updateOrder(
+                                                  order.id, "Canceled");
+                                              setState(() {
+                                                // Refresh the widget by rebuilding the widget tree
+                                                _ordersFuture =
+                                                    fetchOrdersByGroupId();
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                            ),
+                                            child: const Text('Hủy đơn'),
                                           ),
-                                          child: const Text('Hủy đơn'),
                                         ),
                                       ],
                                     ),

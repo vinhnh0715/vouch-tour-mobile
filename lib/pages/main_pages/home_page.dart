@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vouch_tour_mobile/pages/backup_pages/cart_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/group_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/menu_page.dart';
+import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
 //import 'package:vouch_tour_mobile/utils/drawer.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
@@ -59,20 +59,11 @@ class _HomePageState extends State<HomePage> {
                       child: Text("Hello world! This is home page."),
                     ),
                   ),
-                  //const OrderPage(),
-                  const ProviderScope(
-                    child: CartPage(),
-                  ),
-                  //CategoryListPage(),
+                  OrderPage(),
                   GroupPage(),
-                  //const TourPage(),
-                  //CategorySearchPage(),
                   ProviderScope(
                     child: MenuPage(),
                   ),
-                  // const ProviderScope(
-                  //   child: ProductListPage(),
-                  // ),
                   const ProfilePage(),
                 ],
               ),
