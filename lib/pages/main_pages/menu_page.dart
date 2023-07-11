@@ -13,6 +13,7 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   List<Menu> menus = [];
   bool isLoading = true;
+  bool menuUpdated = false;
 
   @override
   void initState() {
@@ -20,7 +21,7 @@ class _MenuPageState extends State<MenuPage> {
     fetchMenus();
   }
 
-// get data from api to fetch
+  // get data from api to fetch
   Future<void> fetchMenus() async {
     try {
       final fetchedMenus = await ApiService.fetchMenus();
@@ -36,7 +37,7 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
-// fetch data again when come back
+  // fetch data again when come back
   Future<void> navigateToCartPage() async {
     await Navigator.push(
       context,
@@ -96,10 +97,77 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  // Edit menu logic
+  Future<void> editMenu(Menu menu) async {
+    final TextEditingController textController = TextEditingController();
+    textController.text = menu.title; // Set initial text value
+
+    String updatedTitle = menu.title;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cập nhật tên Menu'),
+          content: TextField(
+            controller: textController,
+            onChanged: (value) {
+              updatedTitle = value;
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Lưu'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await updateMenu(menu, updatedTitle);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> updateMenu(Menu menu, String updatedTitle) async {
+    try {
+      await ApiService.editMenu(menu.id, updatedTitle);
+      String currentTourGuideId = await ApiService.currentUserId;
+      final updatedMenu = Menu(
+          id: menu.id,
+          title: updatedTitle,
+          numOfProduct: menu.numOfProduct,
+          tourGuideId: currentTourGuideId,
+          status: menu.status,
+          products: menu.products);
+      final updatedIndex = menus.indexWhere((m) => m.id == menu.id);
+      if (updatedIndex != -1) {
+        setState(() {
+          menus[updatedIndex] = updatedMenu;
+          menuUpdated = true;
+        });
+      }
+    } catch (e) {
+      print('Error updating menu: $e');
+      // Handle the error as per your requirement
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final paddingValue = screenWidth * 0.1;
+
+    if (menuUpdated) {
+      fetchMenus();
+      menuUpdated = false;
+    }
 
     return Scaffold(
       body: Container(
@@ -130,7 +198,7 @@ class _MenuPageState extends State<MenuPage> {
                           padding: EdgeInsets.only(
                               left: 16.0, top: 16.0, bottom: 10.0),
                           child: Text(
-                            'Quản lý danh sách các menu',
+                            'Quản lý danh sách các Menu',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -217,8 +285,7 @@ class _MenuPageState extends State<MenuPage> {
                                           icon: const Icon(Icons.edit),
                                           color: Colors.grey,
                                           onPressed: () {
-                                            // Edit button logic
-                                            // Add your code here
+                                            editMenu(menu);
                                           },
                                         ),
                                         IconButton(

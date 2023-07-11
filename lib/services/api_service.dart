@@ -419,6 +419,34 @@ class ApiService {
     }
   }
 
+  //edit menu
+  static Future<void> editMenu(String menuId, String title) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus');
+    final body = jsonEncode({
+      'menuId': menuId,
+      'title': title,
+    });
+
+    final response = await http.put(url,
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+      // Menu updated successfully
+      print('Menu updated');
+    } else {
+      throw Exception('Failed to update menu');
+    }
+  }
+
   // ========================= TOURGUIDE API ==============================
   // get all orders in group by group id
   static Future<List<OrderModel>> fetchOrdersByGroupId(String groupId) async {

@@ -133,32 +133,50 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
               const SizedBox(
                 height: 6.0,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          GenerateQrCodePage(groupId: widget.group.id!),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                GenerateQrCodePage(groupId: widget.group.id!),
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      child: const Text('Chia sẻ QR Code'),
                     ),
-                  );
-                },
-                child: Text('Show QR Code'),
-              ),
-              const SizedBox(
-                height: 6.0,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          GroupOrderPage(groupId: widget.group.id!),
+                  ),
+                  const SizedBox(width: 6.0),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                GroupOrderPage(groupId: widget.group.id!),
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      child: const Text('Đơn hàng của nhóm'),
                     ),
-                  );
-                },
-                child: Text('View Orders'),
+                  ),
+                ],
               ),
             ],
           ),

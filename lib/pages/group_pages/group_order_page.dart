@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/order_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
@@ -35,7 +36,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Orders in Group'),
+        title: const Text('Đơn hàng của nhóm'),
       ),
       body: FutureBuilder<List<OrderModel>>(
         future: _ordersFuture,
@@ -48,37 +49,99 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
             return const Center(
               child: Text(
                 //'Error: ${snapshot.error}',
-                'There is no order in this group',
+                'Nhóm không có đơn hàng nào',
                 style: TextStyle(color: Colors.red),
               ),
             );
           } else {
             final orders = snapshot.data ?? [];
             if (orders.isNotEmpty) {
-              return ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  final order = orders[index];
-                  return ListTile(
-                    title: Text('Order ID: ${order.id}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Total Price: ${order.totalPrice}'),
-                        Text('Status: ${order.status}'),
-                        Text('Customer Name: ${order.customerName}'),
-                      ],
-                    ),
-                    onTap: () {
-                      // Handle order tap
+              return ListView(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      final order = orders[index];
+                      return Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 16.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 4.0,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SingleChildScrollView(
+                            child: ListTile(
+                              title: Text(
+                                'Mã đơn hàng: ${order.id}',
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        'Tên khách hàng: ${order.customerName}'),
+                                    Text('Số điện thoại: ${order.phoneNumber}'),
+                                    Text(
+                                        'Tổng giá tiền: ${order.totalPrice} VND'),
+                                    Text(
+                                      'Ngày đặt hàng: ${DateFormat('dd/MM/yyyy').format(order.creationDate)}',
+                                    ),
+                                    Text('Trạng thái: ${order.status}'),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Handle Accept Order button tap
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                          ),
+                                          child: const Text('Nhận đơn'),
+                                        ),
+                                        const SizedBox(width: 36),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Handle Deny Order button tap
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                          ),
+                                          child: const Text('Hủy đơn'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ));
                     },
-                  );
-                },
+                  ),
+                ],
               );
             } else {
-              return const Text(
-                'No orders found.',
-                style: TextStyle(color: Colors.red),
+              return const Center(
+                child: Text(
+                  'Nhóm không có đơn hàng nào!',
+                  style: TextStyle(color: Colors.red),
+                ),
               );
             }
           }

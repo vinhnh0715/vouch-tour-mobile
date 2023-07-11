@@ -40,7 +40,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu Detail'),
+        title: const Text('Chi tiết Menu'),
       ),
       body: _isLoading
           ? Center(
