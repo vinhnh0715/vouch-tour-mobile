@@ -7,8 +7,8 @@ import 'package:vouch_tour_mobile/models/product_model.dart';
 import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
 import 'package:vouch_tour_mobile/models/tour_guide_model.dart';
-
-import '../models/order_model.dart';
+import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
+import 'package:vouch_tour_mobile/models/order_model.dart';
 
 class ApiService {
   static const String baseUrl =
@@ -513,6 +513,27 @@ class ApiService {
       throw Exception('There is no order in this group');
     } else {
       throw Exception('Failed to fetch orders by group ID');
+    }
+  }
+
+  // Dashboard
+  static Future<DashboardTourGuide> fetchTourGuideById(
+      String tourGuideId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}tour-guides/$tourGuideId');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> tourGuideJson = json.decode(response.body);
+      return DashboardTourGuide.fromJson(tourGuideJson);
+    } else {
+      throw Exception('Failed to fetch tour guide information');
     }
   }
 

@@ -2,7 +2,7 @@
     package="com.example.vouch_tour_mobile">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="vouch_tour_mobile"
+        android:label="Vouch Tour"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
