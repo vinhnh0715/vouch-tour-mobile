@@ -39,23 +39,85 @@ class _InformationProfilePageState extends State<InformationProfilePage> {
             );
           } else if (snapshot.hasData) {
             final tourGuide = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Tên: ${tourGuide.name}'),
-                  Text('Giới tính: ${tourGuide.sex == 0 ? 'Male' : 'Female'}'),
-                  Text('Số điện thoại: ${tourGuide.phoneNumber}'),
-                  Text('Email: ${tourGuide.email}'),
-                  Text('Địa chỉ: ${tourGuide.address}'),
-                  Text('Trạng thái: ${tourGuide.status}'),
-                ],
+            return Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.lightBlue, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView(
+                  children: [
+                    ListTile(
+                      title: const Text(
+                        'Tên',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.name),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Giới tính',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.sex == 0 ? 'Nam' : 'Nữ'),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Số điện thoại',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.phoneNumber),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Email',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.email),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Địa chỉ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.address),
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Trạng thái',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(tourGuide.status),
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
-            return Center(
-              child: Text('No data available'),
+            return const Center(
+              child: Text('Thông tin của bạn chưa được cập nhật'),
             );
           }
         },

@@ -187,7 +187,7 @@ class _MenuPageState extends State<MenuPage> {
               )
             : menus.isEmpty
                 ? const Center(
-                    child: Text('No menus available'),
+                    child: Text('Bạn không có menu nào'),
                   )
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: paddingValue),

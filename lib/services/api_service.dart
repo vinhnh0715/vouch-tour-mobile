@@ -517,7 +517,7 @@ class ApiService {
   }
 
   // Dashboard
-  static Future<DashboardTourGuide> fetchTourGuideById(
+  static Future<DashboardTourGuideModel> fetchTourGuideById(
       String tourGuideId) async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
@@ -531,7 +531,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> tourGuideJson = json.decode(response.body);
-      return DashboardTourGuide.fromJson(tourGuideJson);
+      return DashboardTourGuideModel.fromJson(tourGuideJson);
     } else {
       throw Exception('Failed to fetch tour guide information');
     }

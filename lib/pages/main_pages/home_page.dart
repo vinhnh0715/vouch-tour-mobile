@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/group_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/menu_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int numberOfGroup = 0;
   int numberOfOrderCompleted = 0;
+  int numberOfOrderCanceled = 0;
+  int numberOfOrderWaiting = 0;
   int numberOfProductSold = 0;
   int point = 0;
 
@@ -41,14 +44,16 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchData() async {
     try {
-      final DashboardTourGuide tourGuide =
+      final DashboardTourGuideModel tourGuide =
           await ApiService.fetchTourGuideById(ApiService.currentUserId);
 
       setState(() {
-        numberOfGroup = tourGuide.numberOfGroup;
-        numberOfOrderCompleted = tourGuide.numberOfOrderCompleted;
-        numberOfProductSold = tourGuide.numberOfProductSold;
-        point = tourGuide.point;
+        numberOfGroup = tourGuide.reportInMonth.numberOfGroup;
+        numberOfOrderCompleted = tourGuide.reportInMonth.numberOfOrderCompleted;
+        numberOfOrderCanceled = tourGuide.reportInMonth.numberOfOrderCanceled;
+        numberOfOrderWaiting = tourGuide.reportInMonth.numberOfOrderWaiting;
+        numberOfProductSold = tourGuide.reportInMonth.numberOfProductSold;
+        point = tourGuide.reportInMonth.point;
       });
     } catch (e) {
       // Handle API error
@@ -134,6 +139,37 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SizedBox(height: 16),
+
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Hoàn thành thêm ${10 - (numberOfOrderCompleted % 10)} đơn để nhận thêm điểm',
+                                  style: const TextStyle(
+                                      fontSize: 16.0, color: Colors.grey),
+                                ),
+                                const SizedBox(width: 8),
+                                LinearPercentIndicator(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.85,
+                                  lineHeight: 16.0,
+                                  percent: 1 -
+                                      ((10 - (numberOfOrderCompleted % 10)) /
+                                          10),
+                                  center: Text(
+                                    "${100 - ((10 - (numberOfOrderCompleted % 10)) * 10)}%",
+                                    style: const TextStyle(fontSize: 12.0),
+                                  ),
+                                  trailing: const Icon(Icons.mood),
+                                  linearStrokeCap: LinearStrokeCap.roundAll,
+                                  backgroundColor: Colors.grey,
+                                  progressColor: Colors.blue,
+                                ),
+                              ],
+                            ),
+                          ),
+
                           // Pie Chart Widget with Box Cover
                           SizedBox(
                             //width: 200,
@@ -160,10 +196,16 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         const SizedBox(height: 8),
                                         const Text(
-                                          'Tổng quát đơn hàng',
+                                          'Tổng quát',
                                           style: TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Bạn có ${numberOfOrderCompleted + numberOfOrderCanceled + numberOfOrderWaiting} đơn hàng',
+                                          style: const TextStyle(
+                                            fontSize: 18,
                                           ),
                                         ),
                                         SfCircularChart(
@@ -173,8 +215,10 @@ class _HomePageState extends State<HomePage> {
                                               dataSource: <Data>[
                                                 Data('Hoàn thành',
                                                     numberOfOrderCompleted),
-                                                Data('Đã Hủy', 2),
-                                                Data('Đang Đợi', 5),
+                                                Data('Đã Hủy',
+                                                    numberOfOrderCanceled),
+                                                Data('Đang Đợi',
+                                                    numberOfOrderWaiting),
                                               ],
                                               xValueMapper: (Data data, _) =>
                                                   data.category,
@@ -263,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                                             MainAxisAlignment.center,
                                         children: [
                                           const Text(
-                                            'Số sản phẩm bán được',
+                                            'Số sản phẩm đã bán',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -272,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            '$numberOfGroup',
+                                            '$numberOfProductSold',
                                             style:
                                                 const TextStyle(fontSize: 16),
                                           ),
