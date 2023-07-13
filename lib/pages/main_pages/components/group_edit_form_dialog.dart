@@ -67,7 +67,7 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
         startDate == null ||
         endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
+        const SnackBar(content: Text('Vui lòng điền vào tất cả chỗ trống')),
       );
       return;
     }
@@ -104,22 +104,23 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Group'),
+      title: const Text('Cập nhật nhóm Tour'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: groupNameController,
-              decoration: const InputDecoration(labelText: 'Group Name'),
+              decoration: const InputDecoration(labelText: 'Tên nhóm'),
             ),
             TextField(
               controller: descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(labelText: 'Mô tả'),
             ),
             TextField(
               controller: quantityController,
-              decoration: const InputDecoration(labelText: 'Quantity'),
+              decoration:
+                  const InputDecoration(labelText: 'Số lượng thành viên'),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
@@ -141,8 +142,8 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
                     },
                     child: Text(
                       startDate != null
-                          ? 'Start Date: ${DateFormat('dd/MM/yyyy').format(startDate!)}'
-                          : 'Select Start Date',
+                          ? 'Ngày bắt đầu: ${DateFormat('dd/MM/yyyy').format(startDate!)}'
+                          : 'Hãy chọn ngày bắt đầu',
                     ),
                   ),
                 ),
@@ -163,8 +164,8 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
                     },
                     child: Text(
                       endDate != null
-                          ? 'End Date: ${DateFormat('dd/MM/yyyy').format(endDate!)}'
-                          : 'Select End Date',
+                          ? 'Ngày kết thúc: ${DateFormat('dd/MM/yyyy').format(endDate!)}'
+                          : 'Hãy chọn ngày kết thúc',
                     ),
                   ),
                 ),

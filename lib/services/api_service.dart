@@ -7,6 +7,8 @@ import 'package:vouch_tour_mobile/models/product_model.dart';
 import 'package:vouch_tour_mobile/models/product_menu_model.dart';
 import 'package:vouch_tour_mobile/models/category_model.dart' as CategoryModel;
 import 'package:vouch_tour_mobile/models/tour_guide_model.dart';
+import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
+import 'package:vouch_tour_mobile/models/order_model.dart';
 
 class ApiService {
   static const String baseUrl =
@@ -251,7 +253,25 @@ class ApiService {
   }
 
   // Create group
-  static Future<void> createGroup(Group group) async {
+  // static Future<void> createGroup(Group group) async {
+  //   String jwtToken = ApiService.jwtToken;
+  //   if (jwtToken.isEmpty) {
+  //     jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+  //   }
+
+  //   final url = Uri.parse('${baseUrl}groups');
+  //   final body = jsonEncode(group.toJson());
+
+  //   await http.post(
+  //     url,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $jwtToken',
+  //     },
+  //     body: body,
+  //   );
+  // }
+  static Future<http.Response> createGroup(Group group) async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
       jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
@@ -260,7 +280,7 @@ class ApiService {
     final url = Uri.parse('${baseUrl}groups');
     final body = jsonEncode(group.toJson());
 
-    await http.post(
+    final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -268,6 +288,8 @@ class ApiService {
       },
       body: body,
     );
+
+    return response;
   }
 
   // Get group by ID
@@ -320,6 +342,32 @@ class ApiService {
     } else {
       throw Exception(
           'Failed to update group. Status code: ${response.statusCode} and ${response.body}');
+    }
+  }
+
+  // delete group by id
+  static Future<void> deleteGroup(String groupId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups/$groupId');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 204) {
+      print('Group deleted successfully');
+    } else if (response.statusCode == 401) {
+      // Handle token expiration or invalid token error
+      throw Exception('Unauthorized request');
+    } else {
+      throw Exception('Failed to delete group');
     }
   }
 
@@ -414,6 +462,153 @@ class ApiService {
       return productsJson.map((json) => ProductMenu.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch products in menu');
+    }
+  }
+
+  //edit menu
+  static Future<void> editMenu(String menuId, String title) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}menus');
+    final body = jsonEncode({
+      'menuId': menuId,
+      'title': title,
+    });
+
+    final response = await http.put(url,
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+      // Menu updated successfully
+      print('Menu updated');
+    } else {
+      throw Exception('Failed to update menu');
+    }
+  }
+
+  // ========================= TOURGUIDE API ==============================
+  // get all orders in group by group id
+  static Future<List<OrderModel>> fetchOrdersByGroupId(String groupId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}groups/$groupId/orders');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> ordersJson = json.decode(response.body);
+      return ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+    } else if (response.statusCode == 404) {
+      throw Exception('There is no order in this group');
+    } else {
+      throw Exception('Failed to fetch orders by group ID');
+    }
+  }
+
+  // Dashboard
+  static Future<DashboardTourGuide> fetchTourGuideById(
+      String tourGuideId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}tour-guides/$tourGuideId');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> tourGuideJson = json.decode(response.body);
+      return DashboardTourGuide.fromJson(tourGuideJson);
+    } else {
+      throw Exception('Failed to fetch tour guide information');
+    }
+  }
+
+  // ========================= ORDER API ==============================
+  //update order
+  static Future<void> updateOrder(String orderId, String title) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders');
+    final body = jsonEncode({
+      'id': orderId,
+      'status': title,
+    });
+
+    final response = await http.put(url,
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json',
+        },
+        body: body);
+
+    if (response.statusCode == 204) {
+      // Order updated successfully
+      print('Order updated');
+    } else {
+      throw Exception('Failed to update order');
+    }
+  }
+
+  // Get all Order of tourguide
+  static Future<List<OrderModel>> fetchOrders() async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> ordersJson = json.decode(response.body);
+      return ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch orders');
+    }
+  }
+
+  // Get Order detail by order id
+  static Future<OrderModel> getOrderByOrderId(String orderId) async {
+    String jwtToken = ApiService.jwtToken;
+    if (jwtToken.isEmpty) {
+      jwtToken = await ApiService.fetchJwtToken(ApiService.currentEmail);
+    }
+
+    final url = Uri.parse('${baseUrl}orders/$orderId');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final orderJson = json.decode(response.body);
+      return OrderModel.fromJson(orderJson);
+    } else {
+      throw Exception('Failed to fetch order details');
     }
   }
 }

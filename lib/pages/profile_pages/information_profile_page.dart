@@ -18,20 +18,19 @@ class _InformationProfilePageState extends State<InformationProfilePage> {
   void initState() {
     super.initState();
     _tourGuideFuture = ApiService.fetchTourGuide(widget.tourGuideId);
-    //_tourGuideFuture = ApiService.fetchTourGuide('21c17a71-fc44-472e-8855-ebb251bdee05');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Information Profile'),
+        title: const Text('Thông tin cá nhân'),
       ),
       body: FutureBuilder<TourGuide>(
         future: _tourGuideFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -45,13 +44,12 @@ class _InformationProfilePageState extends State<InformationProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name: ${tourGuide.name}'),
-                  Text('Sex: ${tourGuide.sex}'),
-                  Text('Phone Number: ${tourGuide.phoneNumber}'),
+                  Text('Tên: ${tourGuide.name}'),
+                  Text('Giới tính: ${tourGuide.sex == 0 ? 'Male' : 'Female'}'),
+                  Text('Số điện thoại: ${tourGuide.phoneNumber}'),
                   Text('Email: ${tourGuide.email}'),
-                  Text('Status: ${tourGuide.status}'),
-                  Text('Address: ${tourGuide.address}'),
-                  Text('Admin ID: ${tourGuide.adminId}'),
+                  Text('Địa chỉ: ${tourGuide.address}'),
+                  Text('Trạng thái: ${tourGuide.status}'),
                 ],
               ),
             );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vouch_tour_mobile/models/group_model.dart';
 import 'package:vouch_tour_mobile/models/product_menu_model.dart';
+import 'package:vouch_tour_mobile/pages/group_pages/group_order_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 
 import 'generator_page.dart';
@@ -26,8 +27,9 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
 
   Future<List<ProductMenu>> fetchProductsInMenu() async {
     try {
+      String? menuId = widget.group.menuId;
       final List<ProductMenu> productsInMenu =
-          await ApiService.fetchProductsInMenu(widget.group.menuId ?? '');
+          await ApiService.fetchProductsInMenu(menuId!);
       return productsInMenu;
     } catch (e) {
       // Handle error
@@ -64,7 +66,6 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
                   'Ngày bắt đầu: ${dateFormat.format(widget.group.startDate)}'),
               Text('Ngày kết thúc: ${dateFormat.format(widget.group.endDate)}'),
               const Text('Trạng thái: In Progress'),
-              Text('Menu Id: ${widget.group.menuId}'),
               const SizedBox(height: 16.0),
               const Text(
                 'Menu dành cho nhóm:',
@@ -132,16 +133,50 @@ class _GroupPageDetailState extends State<GroupPageDetail> {
               const SizedBox(
                 height: 6.0,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GenerateQrCodePage(),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                GenerateQrCodePage(groupId: widget.group.id!),
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      child: const Text('Chia sẻ QR Code'),
                     ),
-                  );
-                },
-                child: Text('Generate QR Code'),
+                  ),
+                  const SizedBox(width: 6.0),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                GroupOrderPage(groupId: widget.group.id!),
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      child: const Text('Đơn hàng của nhóm'),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -37,6 +37,16 @@ class _GroupPageState extends State<GroupPage> {
     }
   }
 
+  Future<void> deleteGroup(String groupId) async {
+    try {
+      await ApiService.deleteGroup(groupId);
+      await fetchGroups(); // Refresh the groups after deletion
+    } catch (e) {
+      print('Error deleting group: $e');
+      // Handle the error accordingly
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -192,20 +202,26 @@ class _GroupPageState extends State<GroupPage> {
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
-                                                          // Call the delete API and remove the group
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child:
-                                                            const Text('Xóa'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
                                                           Navigator.pop(
                                                               context);
                                                         },
                                                         child:
                                                             const Text('Hủy'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          // Call the delete API and remove the group
+                                                          deleteGroup(
+                                                              group.id!);
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          'Xóa',
+                                                          style: TextStyle(
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
