@@ -11,8 +11,9 @@ import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
 import 'package:vouch_tour_mobile/models/order_model.dart';
 
 class ApiService {
-  static const String baseUrl =
-      'https://vouch-tour-apis.azurewebsites.net/api/';
+  // static const String baseUrl =
+  //     'https://vouch-tour-apis.azurewebsites.net/api/';
+  static const String baseUrl = 'https://vouch-tour.azurewebsites.net/api/';
   static String jwtToken = '';
   static String currentEmail = '';
   static String currentUserId = '';
