@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '493014158201',
     projectId: 'vouch-tour-mobile-swd',
     authDomain: 'vouch-tour-mobile-swd.firebaseapp.com',
+    databaseURL: 'https://vouch-tour-mobile-swd-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vouch-tour-mobile-swd.appspot.com',
     measurementId: 'G-B0XKNQ8Y9D',
   );
@@ -58,18 +59,20 @@ class DefaultFirebaseOptions {
     appId: '1:493014158201:android:9197a2c32598e31b517da8',
     messagingSenderId: '493014158201',
     projectId: 'vouch-tour-mobile-swd',
+    databaseURL: 'https://vouch-tour-mobile-swd-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vouch-tour-mobile-swd.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBn2eLkwbNwYzND6xL5b_-xHrcdh2_mx8Y',
-    appId: '1:493014158201:ios:ca715a75be04a3e8517da8',
+    appId: '1:493014158201:ios:f9f1c33b24ef7895517da8',
     messagingSenderId: '493014158201',
     projectId: 'vouch-tour-mobile-swd',
+    databaseURL: 'https://vouch-tour-mobile-swd-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vouch-tour-mobile-swd.appspot.com',
     androidClientId: '493014158201-gs38cd35a7rds7bet4lu70jbnv9jl0ln.apps.googleusercontent.com',
-    iosClientId: '493014158201-n98jrqdliulodvi83kje662rdhnapa7c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.vouchTourMobile',
+    iosClientId: '493014158201-ung7g4bu0n0fattfuo26af7lkm5097l9.apps.googleusercontent.com',
+    iosBundleId: 'com.groupswd.vouchTourMobile',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,6 +80,7 @@ class DefaultFirebaseOptions {
     appId: '1:493014158201:ios:ca715a75be04a3e8517da8',
     messagingSenderId: '493014158201',
     projectId: 'vouch-tour-mobile-swd',
+    databaseURL: 'https://vouch-tour-mobile-swd-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vouch-tour-mobile-swd.appspot.com',
     androidClientId: '493014158201-gs38cd35a7rds7bet4lu70jbnv9jl0ln.apps.googleusercontent.com',
     iosClientId: '493014158201-n98jrqdliulodvi83kje662rdhnapa7c.apps.googleusercontent.com',

@@ -4,16 +4,17 @@ import 'package:vouch_tour_mobile/firebase_options.dart';
 import 'package:vouch_tour_mobile/routes/routes.dart';
 import 'package:vouch_tour_mobile/themes/theme.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
- 
-
   print("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // Initialize Firebase
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform); // Initialize Firebase
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -24,7 +25,18 @@ void main() async {
       print('Message also contained a notification: ${message.notification}');
     }
   });
+  String? token = await messaging.getToken();
+  if (token != null) {
+    saveTokenToDatabase(token);
+  }
   runApp(const MyApp());
+}
+
+void saveTokenToDatabase(String token) async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo info = await deviceInfo.androidInfo;
+  DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+  databaseRef.child('deviceId').child(info.device).child('fcmToken').set(token);
 }
 
 class MyApp extends StatelessWidget {
