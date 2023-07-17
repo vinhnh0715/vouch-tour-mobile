@@ -11,8 +11,9 @@ import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
 import 'package:vouch_tour_mobile/models/order_model.dart';
 
 class ApiService {
-  static const String baseUrl =
-      'https://vouch-tour-apis.azurewebsites.net/api/';
+  // static const String baseUrl =
+  //     'https://vouch-tour-apis.azurewebsites.net/api/';
+  static const String baseUrl = 'https://vouch-tour.azurewebsites.net/api/';
   static String jwtToken = '';
   static String currentEmail = '';
   static String currentUserId = '';
@@ -517,7 +518,7 @@ class ApiService {
   }
 
   // Dashboard
-  static Future<DashboardTourGuide> fetchTourGuideById(
+  static Future<DashboardTourGuideModel> fetchTourGuideById(
       String tourGuideId) async {
     String jwtToken = ApiService.jwtToken;
     if (jwtToken.isEmpty) {
@@ -531,7 +532,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> tourGuideJson = json.decode(response.body);
-      return DashboardTourGuide.fromJson(tourGuideJson);
+      return DashboardTourGuideModel.fromJson(tourGuideJson);
     } else {
       throw Exception('Failed to fetch tour guide information');
     }

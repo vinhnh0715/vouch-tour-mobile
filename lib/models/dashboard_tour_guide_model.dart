@@ -1,4 +1,4 @@
-class DashboardTourGuide {
+class DashboardTourGuideModel {
   final String id;
   final String name;
   final int sex;
@@ -7,12 +7,9 @@ class DashboardTourGuide {
   final String status;
   final String address;
   final String adminId;
-  final int numberOfGroup;
-  final int numberOfOrderCompleted;
-  final int numberOfProductSold;
-  final int point;
+  final ReportInMonth reportInMonth;
 
-  DashboardTourGuide({
+  DashboardTourGuideModel({
     required this.id,
     required this.name,
     required this.sex,
@@ -21,14 +18,11 @@ class DashboardTourGuide {
     required this.status,
     required this.address,
     required this.adminId,
-    required this.numberOfGroup,
-    required this.numberOfOrderCompleted,
-    required this.numberOfProductSold,
-    required this.point,
+    required this.reportInMonth,
   });
 
-  factory DashboardTourGuide.fromJson(Map<String, dynamic> json) {
-    return DashboardTourGuide(
+  factory DashboardTourGuideModel.fromJson(Map<String, dynamic> json) {
+    return DashboardTourGuideModel(
       id: json['id'],
       name: json['name'],
       sex: json['sex'],
@@ -37,8 +31,34 @@ class DashboardTourGuide {
       status: json['status'],
       address: json['address'],
       adminId: json['adminId'],
+      reportInMonth: ReportInMonth.fromJson(json['reportInMonth']),
+    );
+  }
+}
+
+class ReportInMonth {
+  final int numberOfGroup;
+  final int numberOfOrderCompleted;
+  final int numberOfOrderWaiting;
+  final int numberOfOrderCanceled;
+  final int numberOfProductSold;
+  final int point;
+
+  ReportInMonth({
+    required this.numberOfGroup,
+    required this.numberOfOrderCompleted,
+    required this.numberOfOrderWaiting,
+    required this.numberOfOrderCanceled,
+    required this.numberOfProductSold,
+    required this.point,
+  });
+
+  factory ReportInMonth.fromJson(Map<String, dynamic> json) {
+    return ReportInMonth(
       numberOfGroup: json['numberOfGroup'],
       numberOfOrderCompleted: json['numberOfOrderCompleted'],
+      numberOfOrderWaiting: json['numberOfOrderWaiting'],
+      numberOfOrderCanceled: json['numberOfOrderCanceled'],
       numberOfProductSold: json['numberOfProductSold'],
       point: json['point'],
     );

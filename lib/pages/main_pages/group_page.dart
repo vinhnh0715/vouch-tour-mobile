@@ -70,7 +70,7 @@ class _GroupPageState extends State<GroupPage> {
               )
             : groups.isEmpty
                 ? const Center(
-                    child: Text('You have no groups available'),
+                    child: Text('Bạn không có nhóm tour nào'),
                   )
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: paddingValue),
