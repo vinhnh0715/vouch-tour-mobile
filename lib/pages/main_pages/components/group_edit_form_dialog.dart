@@ -79,6 +79,7 @@ class _GroupEditFormDialogState extends State<GroupEditFormDialog> {
       quantity: quantity,
       startDate: startDate!,
       endDate: endDate!,
+      status: widget.group.status,
       menuId: selectedMenu?.id ?? '',
     );
 
