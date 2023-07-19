@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "493014158201",
+    "firebase_url": "https://vouch-tour-mobile-swd-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "vouch-tour-mobile-swd",
     "storage_bucket": "vouch-tour-mobile-swd.appspot.com"
   },
@@ -37,6 +38,13 @@
             {
               "client_id": "493014158201-42o1akdfick8mb022tgeo78vpdhi4oe4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "493014158201-lr71prlp52fkvh3jpd64l5jnbnb0tolk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.groupswd.vouchtour"
+              }
             }
           ]
         }

@@ -58,10 +58,17 @@ dependencies:
   quickalert: ^1.0.1
   flutter_rating_bar: ^4.0.1
   collection: ^1.15.0
+  firebase_messaging: ^14.6.3
+  firebase_analytics: ^10.4.3
   qr_flutter: ^4.1.0
   syncfusion_flutter_charts: ^22.1.38
   pie_chart: ^5.3.2
   percent_indicator: ^4.2.3
+  firebase_database: ^10.2.4
+  device_info_plus: ^9.0.2
+  flutter_local_notifications: ^15.1.0+1
+  sqflite: ^2.2.8+4
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
