@@ -4,8 +4,7 @@ import 'package:vouch_tour_mobile/firebase_options.dart';
 import 'package:vouch_tour_mobile/routes/routes.dart';
 import 'package:vouch_tour_mobile/themes/theme.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
@@ -13,8 +12,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform); // Initialize Firebase
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Initialize flutter_local_notifications
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+// Configure the initialization settings
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
+  final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  // Initialize the plugin with the initialization settings
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -23,20 +30,25 @@ void main() async {
 
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');
+
+      // Show the notification using flutter_local_notifications
+      flutterLocalNotificationsPlugin.show(
+        0,
+        message.notification!.title,
+        message.notification!.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'voucher_channel',
+            'Voucher Promotions',
+            channelDescription:"Your description",
+            importance: Importance.max,
+          ),
+        ),
+      );
     }
   });
-  String? token = await messaging.getToken();
-  if (token != null) {
-    saveTokenToDatabase(token);
-  }
-  runApp(const MyApp());
-}
 
-void saveTokenToDatabase(String token) async {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  AndroidDeviceInfo info = await deviceInfo.androidInfo;
-  DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-  databaseRef.child('deviceId').child(info.device).child('fcmToken').set(token);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

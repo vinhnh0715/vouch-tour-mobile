@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -11,6 +12,8 @@ import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 //import 'package:vouch_tour_mobile/utils/drawer.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchData() async {
     try {
       final DashboardTourGuideModel tourGuide =
-          await ApiService.fetchTourGuideById(ApiService.currentUserId);
+      await ApiService.fetchTourGuideById(ApiService.currentUserId);
 
       setState(() {
         numberOfGroup = tourGuide.reportInMonth.numberOfGroup;
@@ -55,6 +58,9 @@ class _HomePageState extends State<HomePage> {
         numberOfProductSold = tourGuide.reportInMonth.numberOfProductSold;
         point = tourGuide.reportInMonth.point;
       });
+      DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+      String? token = await FirebaseMessaging.instance.getToken();
+      databaseRef.child('TourGuideId').child(tourGuide.id).child('fcmToken').set(token);
     } catch (e) {
       // Handle API error
       print('API Error: $e');
