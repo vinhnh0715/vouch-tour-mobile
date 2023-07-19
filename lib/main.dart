@@ -5,11 +5,22 @@ import 'package:vouch_tour_mobile/routes/routes.dart';
 import 'package:vouch_tour_mobile/themes/theme.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:vouch_tour_mobile/utils/notification_database.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
-
+Future<void> _saveNotificationToStorage(RemoteMessage message) async {
+  try {
+    final notificationData = {
+      'title': message.notification?.title ?? '',
+      'body': message.notification?.body ?? '',
+    };
+    await NotificationDatabase.instance.insertNotification(notificationData);
+  } catch (e) {
+    print("Error saving notification to storage: $e");
+  }
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
@@ -30,7 +41,8 @@ void main() async {
 
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');
-
+      // Save the notification to the SQLite database
+      _saveNotificationToStorage(message);
       // Show the notification using flutter_local_notifications
       flutterLocalNotificationsPlugin.show(
         0,
@@ -40,7 +52,7 @@ void main() async {
           android: AndroidNotificationDetails(
             'voucher_channel',
             'Voucher Promotions',
-            channelDescription:"Your description",
+            channelDescription:"Receive notifications about exciting voucher promotions",
             importance: Importance.max,
           ),
         ),

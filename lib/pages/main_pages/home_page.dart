@@ -9,6 +9,7 @@ import 'package:vouch_tour_mobile/pages/main_pages/menu_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/order_page.dart';
 import 'package:vouch_tour_mobile/pages/main_pages/profile_page.dart';
 import 'package:vouch_tour_mobile/models/dashboard_tour_guide_model.dart';
+import 'package:vouch_tour_mobile/pages/notification_page.dart';
 import 'package:vouch_tour_mobile/services/api_service.dart';
 //import 'package:vouch_tour_mobile/utils/drawer.dart';
 import 'package:vouch_tour_mobile/utils/footer.dart';
@@ -80,7 +81,10 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: const Icon(Icons.notifications),
               onPressed: () {
-                // Add your notification logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationPage()),
+                );
               },
             ),
           ],

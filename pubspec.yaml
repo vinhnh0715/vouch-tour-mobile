@@ -67,6 +67,8 @@ dependencies:
   firebase_database: ^10.2.4
   device_info_plus: ^9.0.2
   flutter_local_notifications: ^15.1.0+1
+  sqflite: ^2.2.8+4
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
