@@ -5,6 +5,7 @@ class Group {
   final int quantity;
   final DateTime endDate;
   final DateTime startDate;
+  final String status;
   final String? menuId;
 
   Group({
@@ -14,6 +15,7 @@ class Group {
     required this.quantity,
     required this.endDate,
     required this.startDate,
+    required this.status,
     this.menuId,
   });
 
@@ -25,6 +27,7 @@ class Group {
       quantity: json['quantity'],
       endDate: DateTime.parse(json['endDate']),
       startDate: DateTime.parse(json['startDate']),
+      status: json['status'],
       menuId: json['menuId'],
     );
   }
@@ -38,6 +41,7 @@ class Group {
       'quantity': quantity,
       'endDate': endDate.toIso8601String(),
       'startDate': startDate.toIso8601String(),
+      'status': status,
       'menuId': menuId,
     };
   }

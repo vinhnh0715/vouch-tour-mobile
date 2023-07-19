@@ -149,7 +149,8 @@ class _GroupPageState extends State<GroupPage> {
                                                   'Số lượng thành viên: ${group.quantity}'),
                                               Text('Ngày bắt đầu: $startDate'),
                                               Text('Ngày kết thúc: $endDate'),
-                                              Text('Trạng thái: In Progress'),
+                                              Text(
+                                                  'Trạng thái: ${group.status}'),
                                             ],
                                           ),
                                         ),

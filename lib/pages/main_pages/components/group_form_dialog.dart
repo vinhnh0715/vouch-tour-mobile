@@ -42,6 +42,7 @@ class _GroupFormDialogState extends State<GroupFormDialog> {
       quantity: quantity,
       startDate: startDate!,
       endDate: endDate!,
+      status: "UpComing",
     );
 
     final response = await ApiService.createGroup(newGroup);

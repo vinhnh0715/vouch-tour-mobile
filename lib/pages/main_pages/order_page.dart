@@ -28,8 +28,8 @@ class _OrderPageState extends State<OrderPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.lightGreen[200]!,
-              Colors.lightGreen[100]!,
+              Colors.indigo[500]!,
+              Colors.indigo[100]!,
             ],
           ),
         ),
@@ -42,7 +42,7 @@ class _OrderPageState extends State<OrderPage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 16),

@@ -8,7 +8,7 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Thông báo'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: NotificationDatabase.instance.getAllNotifications(),
